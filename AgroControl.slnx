@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AgroControl/AgroControl.csproj" />
+  <Project Path="BusinessLogic/BusinessLogic.csproj" />
+  <Project Path="DataAccess/DataAccess.csproj" />
+  <Project Path="Entities/Entities.csproj" />
+</Solution>
