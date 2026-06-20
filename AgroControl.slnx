@@ -3,4 +3,5 @@
   <Project Path="BusinessLogic/BusinessLogic.csproj" />
   <Project Path="DataAccess/DataAccess.csproj" />
   <Project Path="Entities/Entities.csproj" />
+  <Project Path="SerialBridge/SerialBridge.csproj" />
 </Solution>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Entities;
 
 namespace BusinessLogic
 {
@@ -25,9 +26,9 @@ namespace BusinessLogic
         }
 
         // Obtener una sola planta por su ID
-        public static PlantBus getPlanta(int idPlanta)
+        public static Plant getPlanta(int idPlanta)
         {
-            PlantBus planta = null;
+            Plant planta = null;
             string sql = "SELECT * FROM PLANTA WHERE idPlanta = @id";
 
             List<SqlParameter> parametros = new List<SqlParameter>();
@@ -38,7 +39,7 @@ namespace BusinessLogic
             if (tabla.Rows.Count > 0)
             {
                 DataRow row = tabla.Rows[0];
-                planta = new PlantBus();
+                planta = new Plant();
                 planta.IdPlanta = Convert.ToInt32(row["idPlanta"]);
                 planta.Nombre = row["nombre"].ToString();
                 planta.NombreCien = row["nombreCien"].ToString();
@@ -48,16 +49,16 @@ namespace BusinessLogic
         }
 
         // Obtener la lista completa de plantas
-        public static List<PlantBus> getPlantas()
+        public static List<Plant> getPlantas()
         {
-            List<PlantBus> lista = new List<PlantBus>();
+            List<Plant> lista = new List<Plant>();
             string sql = "SELECT * FROM PLANTA";
 
             DataTable tabla = DataAccess.DataAccess.getQuery(sql);
 
             foreach (DataRow row in tabla.Rows)
             {
-                PlantBus planta = new PlantBus();
+                Plant planta = new Plant();
                 planta.IdPlanta = Convert.ToInt32(row["idPlanta"]);
                 planta.Nombre = row["nombre"].ToString();
                 planta.NombreCien = row["nombreCien"].ToString();

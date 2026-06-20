@@ -28,6 +28,7 @@ namespace AgroControl
             InitializeComponent();
             _usuarioLogueado = usuarioQueIngreso;
             label2.Text = _usuarioLogueado.Nombre;
+            iconButton2.Text = _usuarioLogueado.Nombre;
             this.Text = "Panel Principal - Usuario: " + _usuarioLogueado.Nombre;
         }
 
@@ -71,14 +72,10 @@ namespace AgroControl
             openSonForm(new dashboard());
         }
 
-        private void iconButton11_Click(object sender, EventArgs e)
+        private void iconButton1_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void iconButton10_Click(object sender, EventArgs e)
-        {
-
+            label1.Text = "Technical functions";
+            openSonForm(new technical());
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -112,7 +109,13 @@ namespace AgroControl
         private void btnSettings_Click(object sender, EventArgs e)
         {
             label1.Text = "Settings";
-            openSonForm(new settings());
+            openSonForm(new users());
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            label1.Text = "Help";
+            openSonForm(new help());
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -121,6 +124,11 @@ namespace AgroControl
         }
 
         private void panelTitleBar_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panelDesktop_Paint(object sender, PaintEventArgs e)
         {
 
         }

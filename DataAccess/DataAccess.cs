@@ -10,7 +10,7 @@ namespace DataAccess
 {
     public class DataAccess
     {
-        public static string cadenaConexion = "Server=localhost\\SQLDEVELOPER; Database=agroControl; Trusted_Connection=True;";
+        public static string cadenaConexion = "server=localhost\\SQLDEVELOPER; Database=agroControl; Trusted_Connection=True;";
 
         public static DataTable getQuery(string SQL, List<SqlParameter> parametros)
         {

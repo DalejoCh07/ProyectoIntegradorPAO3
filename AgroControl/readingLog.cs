@@ -17,7 +17,6 @@ namespace AgroControl
         public readingLog()
         {
             InitializeComponent();
-            CargarContenidoSensores();
             CargarHistorialLecturas();
         }
 
@@ -66,17 +65,7 @@ namespace AgroControl
             }
         }
 
-        private void CargarContenidoSensores()
-        {
-            List<Sensor> lista = SensorBus.getSensores();
-            dgvDatosSensores.DataSource = lista;
-        }
 
-        // 3. EL BOTÓN EN CASO DE QUE EL USUARIO QUIERA REFRESCAR MANUALMENTE
-        private void btnCargarSensores_Click(object sender, EventArgs e)
-        {
-            CargarContenidoSensores();
-        }
 
         private void dgvDatosSensores_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

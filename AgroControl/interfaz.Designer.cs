@@ -31,7 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Interfaz));
             iconDropDownButton1 = new FontAwesome.Sharp.IconDropDownButton();
             panelMenu = new Panel();
-            iconButton8 = new FontAwesome.Sharp.IconButton();
+            iconButton1 = new FontAwesome.Sharp.IconButton();
+            btnHelp = new FontAwesome.Sharp.IconButton();
             btnSettings = new FontAwesome.Sharp.IconButton();
             btnPlantRecords = new FontAwesome.Sharp.IconButton();
             btnCharts = new FontAwesome.Sharp.IconButton();
@@ -43,6 +44,7 @@
             label2 = new Label();
             label1 = new Label();
             panelDesktop = new Panel();
+            iconButton2 = new FontAwesome.Sharp.IconButton();
             panelMenu.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -61,7 +63,8 @@
             // panelMenu
             // 
             panelMenu.BackColor = Color.FromArgb(84, 86, 240);
-            panelMenu.Controls.Add(iconButton8);
+            panelMenu.Controls.Add(iconButton1);
+            panelMenu.Controls.Add(btnHelp);
             panelMenu.Controls.Add(btnSettings);
             panelMenu.Controls.Add(btnPlantRecords);
             panelMenu.Controls.Add(btnCharts);
@@ -75,28 +78,53 @@
             panelMenu.Size = new Size(263, 673);
             panelMenu.TabIndex = 0;
             // 
-            // iconButton8
+            // iconButton1
             // 
-            iconButton8.Dock = DockStyle.Bottom;
-            iconButton8.FlatAppearance.BorderSize = 0;
-            iconButton8.FlatStyle = FlatStyle.Flat;
-            iconButton8.Font = new Font("Verdana", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            iconButton8.ForeColor = Color.WhiteSmoke;
-            iconButton8.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
-            iconButton8.IconColor = Color.WhiteSmoke;
-            iconButton8.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton8.IconSize = 25;
-            iconButton8.ImageAlign = ContentAlignment.MiddleLeft;
-            iconButton8.Location = new Point(0, 620);
-            iconButton8.Margin = new Padding(3, 4, 3, 4);
-            iconButton8.Name = "iconButton8";
-            iconButton8.Padding = new Padding(11, 0, 0, 0);
-            iconButton8.Size = new Size(263, 53);
-            iconButton8.TabIndex = 7;
-            iconButton8.Text = "Help";
-            iconButton8.TextAlign = ContentAlignment.MiddleLeft;
-            iconButton8.TextImageRelation = TextImageRelation.ImageBeforeText;
-            iconButton8.UseVisualStyleBackColor = true;
+            iconButton1.Dock = DockStyle.Top;
+            iconButton1.FlatAppearance.BorderSize = 0;
+            iconButton1.FlatStyle = FlatStyle.Flat;
+            iconButton1.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            iconButton1.ForeColor = Color.WhiteSmoke;
+            iconButton1.IconChar = FontAwesome.Sharp.IconChar.Screwdriver;
+            iconButton1.IconColor = Color.WhiteSmoke;
+            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton1.IconSize = 25;
+            iconButton1.ImageAlign = ContentAlignment.MiddleLeft;
+            iconButton1.Location = new Point(0, 398);
+            iconButton1.Margin = new Padding(3, 4, 3, 4);
+            iconButton1.Name = "iconButton1";
+            iconButton1.Padding = new Padding(11, 0, 0, 0);
+            iconButton1.Size = new Size(263, 53);
+            iconButton1.TabIndex = 8;
+            iconButton1.Text = "Technical functions";
+            iconButton1.TextAlign = ContentAlignment.MiddleLeft;
+            iconButton1.TextImageRelation = TextImageRelation.ImageBeforeText;
+            iconButton1.UseVisualStyleBackColor = true;
+            iconButton1.Click += iconButton1_Click;
+            // 
+            // btnHelp
+            // 
+            btnHelp.Dock = DockStyle.Bottom;
+            btnHelp.FlatAppearance.BorderSize = 0;
+            btnHelp.FlatStyle = FlatStyle.Flat;
+            btnHelp.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnHelp.ForeColor = Color.WhiteSmoke;
+            btnHelp.IconChar = FontAwesome.Sharp.IconChar.CircleInfo;
+            btnHelp.IconColor = Color.WhiteSmoke;
+            btnHelp.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnHelp.IconSize = 25;
+            btnHelp.ImageAlign = ContentAlignment.MiddleLeft;
+            btnHelp.Location = new Point(0, 620);
+            btnHelp.Margin = new Padding(3, 4, 3, 4);
+            btnHelp.Name = "btnHelp";
+            btnHelp.Padding = new Padding(11, 0, 0, 0);
+            btnHelp.Size = new Size(263, 53);
+            btnHelp.TabIndex = 7;
+            btnHelp.Text = "Help";
+            btnHelp.TextAlign = ContentAlignment.MiddleLeft;
+            btnHelp.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnHelp.UseVisualStyleBackColor = true;
+            btnHelp.Click += btnHelp_Click;
             // 
             // btnSettings
             // 
@@ -105,7 +133,7 @@
             btnSettings.FlatStyle = FlatStyle.Flat;
             btnSettings.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnSettings.ForeColor = Color.WhiteSmoke;
-            btnSettings.IconChar = FontAwesome.Sharp.IconChar.Key;
+            btnSettings.IconChar = FontAwesome.Sharp.IconChar.UserGear;
             btnSettings.IconColor = Color.WhiteSmoke;
             btnSettings.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSettings.IconSize = 25;
@@ -116,7 +144,7 @@
             btnSettings.Padding = new Padding(11, 0, 0, 0);
             btnSettings.Size = new Size(263, 53);
             btnSettings.TabIndex = 5;
-            btnSettings.Text = "Settings";
+            btnSettings.Text = "Users";
             btnSettings.TextAlign = ContentAlignment.MiddleLeft;
             btnSettings.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSettings.UseVisualStyleBackColor = true;
@@ -246,6 +274,7 @@
             // 
             // panelTitleBar
             // 
+            panelTitleBar.Controls.Add(iconButton2);
             panelTitleBar.Controls.Add(label2);
             panelTitleBar.Controls.Add(label1);
             panelTitleBar.Dock = DockStyle.Top;
@@ -260,9 +289,9 @@
             // 
             label2.Anchor = AnchorStyles.None;
             label2.Font = new Font("Bahnschrift SemiBold", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(837, 12);
+            label2.Location = new Point(445, 12);
             label2.Name = "label2";
-            label2.Size = new Size(159, 32);
+            label2.Size = new Size(117, 32);
             label2.TabIndex = 6;
             label2.Text = "USER";
             label2.Click += label2_Click;
@@ -286,6 +315,26 @@
             panelDesktop.Name = "panelDesktop";
             panelDesktop.Size = new Size(999, 620);
             panelDesktop.TabIndex = 2;
+            panelDesktop.Paint += panelDesktop_Paint;
+            // 
+            // iconButton2
+            // 
+            iconButton2.Dock = DockStyle.Right;
+            iconButton2.FlatAppearance.BorderSize = 0;
+            iconButton2.FlatStyle = FlatStyle.Flat;
+            iconButton2.Font = new Font("Bahnschrift SemiBold", 13.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            iconButton2.IconChar = FontAwesome.Sharp.IconChar.User;
+            iconButton2.IconColor = Color.Black;
+            iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton2.ImageAlign = ContentAlignment.MiddleLeft;
+            iconButton2.Location = new Point(833, 0);
+            iconButton2.Name = "iconButton2";
+            iconButton2.Size = new Size(166, 53);
+            iconButton2.TabIndex = 0;
+            iconButton2.Text = "User";
+            iconButton2.TextAlign = ContentAlignment.MiddleLeft;
+            iconButton2.TextImageRelation = TextImageRelation.ImageBeforeText;
+            iconButton2.UseVisualStyleBackColor = true;
             // 
             // Interfaz
             // 
@@ -321,8 +370,10 @@
         private FontAwesome.Sharp.IconButton btnPlantRecords;
         private FontAwesome.Sharp.IconButton btnCharts;
         private FontAwesome.Sharp.IconButton btnReadingLog;
-        private FontAwesome.Sharp.IconButton iconButton8;
+        private FontAwesome.Sharp.IconButton btnHelp;
         private Label label1;
         private Label label2;
+        private FontAwesome.Sharp.IconButton iconButton1;
+        private FontAwesome.Sharp.IconButton iconButton2;
     }
 }
