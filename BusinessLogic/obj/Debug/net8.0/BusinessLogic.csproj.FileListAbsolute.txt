@@ -32,3 +32,4 @@ C:\Users\daalc\source\repos\AgroControl\BusinessLogic\obj\Debug\net8.0\BusinessL
 C:\Users\daalc\source\repos\AgroControl\BusinessLogic\obj\Debug\net8.0\refint\BusinessLogic.dll
 C:\Users\daalc\source\repos\AgroControl\BusinessLogic\obj\Debug\net8.0\BusinessLogic.pdb
 C:\Users\daalc\source\repos\AgroControl\BusinessLogic\obj\Debug\net8.0\ref\BusinessLogic.dll
+C:\Users\daalc\source\repos\AgroControl\BusinessLogic\obj\Debug\net8.0\BusinessLogic.sourcelink.json

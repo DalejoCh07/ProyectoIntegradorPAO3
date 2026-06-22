@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dashboard));
             panel3 = new Panel();
             pictureBox1 = new PictureBox();
             label15 = new Label();
@@ -58,7 +59,6 @@
             label16 = new Label();
             label17 = new Label();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            panel9 = new Panel();
             panel13 = new Panel();
             label25 = new Label();
             label22 = new Label();
@@ -71,14 +71,29 @@
             label23 = new Label();
             label19 = new Label();
             iconButton2 = new FontAwesome.Sharp.IconButton();
-            label18 = new Label();
-            panel10 = new Panel();
             panel11 = new Panel();
             iconButton1 = new FontAwesome.Sharp.IconButton();
             label26 = new Label();
             label21 = new Label();
-            iconButton3 = new FontAwesome.Sharp.IconButton();
             label27 = new Label();
+            panel9 = new Panel();
+            label30 = new Label();
+            panel10 = new Panel();
+            btnFinishBatch = new FontAwesome.Sharp.IconButton();
+            iconButton3 = new FontAwesome.Sharp.IconButton();
+            btnNewBatch = new FontAwesome.Sharp.IconButton();
+            lblBatchId = new Label();
+            lblNumPlantsValue = new Label();
+            lblPlantValue = new Label();
+            lblPlantingDate = new Label();
+            pictureBox8 = new PictureBox();
+            pictureBox7 = new PictureBox();
+            pictureBox6 = new PictureBox();
+            label33 = new Label();
+            label32 = new Label();
+            label28 = new Label();
+            label18 = new Label();
+            pictureBox5 = new PictureBox();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel5.SuspendLayout();
@@ -91,12 +106,16 @@
             panel7.SuspendLayout();
             panel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
-            panel9.SuspendLayout();
             panel13.SuspendLayout();
             panel14.SuspendLayout();
             panel12.SuspendLayout();
-            panel10.SuspendLayout();
             panel11.SuspendLayout();
+            panel9.SuspendLayout();
+            panel10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             SuspendLayout();
             // 
             // panel3
@@ -110,7 +129,7 @@
             panel3.Controls.Add(label1);
             panel3.Location = new Point(3, 3);
             panel3.Name = "panel3";
-            panel3.Size = new Size(224, 145);
+            panel3.Size = new Size(207, 129);
             panel3.TabIndex = 1;
             // 
             // pictureBox1
@@ -145,10 +164,10 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label6.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             label6.Location = new Point(78, 50);
             label6.Name = "label6";
-            label6.Size = new Size(87, 38);
+            label6.Size = new Size(75, 32);
             label6.TabIndex = 4;
             label6.Text = "value";
             label6.Click += label6_Click;
@@ -156,10 +175,10 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(78, 13);
+            label1.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
+            label1.Location = new Point(78, 16);
             label1.Name = "label1";
-            label1.Size = new Size(132, 23);
+            label1.Size = new Size(110, 19);
             label1.TabIndex = 2;
             label1.Text = "SOIL HUMIDITY";
             label1.Click += label1_Click_1;
@@ -168,7 +187,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Bahnschrift SemiBold", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(10, 22);
+            label5.Location = new Point(17, 12);
             label5.Name = "label5";
             label5.Size = new Size(230, 34);
             label5.TabIndex = 3;
@@ -180,9 +199,9 @@
             panel5.BackColor = Color.Olive;
             panel5.BackgroundImageLayout = ImageLayout.None;
             panel5.Controls.Add(panel3);
-            panel5.Location = new Point(13, 73);
+            panel5.Location = new Point(17, 61);
             panel5.Name = "panel5";
-            panel5.Size = new Size(230, 151);
+            panel5.Size = new Size(213, 135);
             panel5.TabIndex = 8;
             // 
             // panel1
@@ -190,9 +209,9 @@
             panel1.BackColor = Color.Turquoise;
             panel1.BackgroundImageLayout = ImageLayout.None;
             panel1.Controls.Add(panel2);
-            panel1.Location = new Point(262, 75);
+            panel1.Location = new Point(246, 61);
             panel1.Name = "panel1";
-            panel1.Size = new Size(230, 151);
+            panel1.Size = new Size(213, 135);
             panel1.TabIndex = 9;
             // 
             // panel2
@@ -206,7 +225,7 @@
             panel2.Controls.Add(label8);
             panel2.Location = new Point(3, 3);
             panel2.Name = "panel2";
-            panel2.Size = new Size(224, 145);
+            panel2.Size = new Size(207, 129);
             panel2.TabIndex = 1;
             // 
             // pictureBox2
@@ -241,20 +260,20 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label4.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             label4.Location = new Point(78, 48);
             label4.Name = "label4";
-            label4.Size = new Size(87, 38);
+            label4.Size = new Size(75, 32);
             label4.TabIndex = 4;
             label4.Text = "value";
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label8.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             label8.Location = new Point(78, 13);
             label8.Name = "label8";
-            label8.Size = new Size(124, 23);
+            label8.Size = new Size(102, 19);
             label8.TabIndex = 2;
             label8.Text = "AIR HUMIDITY";
             label8.Click += label8_Click;
@@ -264,9 +283,9 @@
             panel4.BackColor = Color.SkyBlue;
             panel4.BackgroundImageLayout = ImageLayout.None;
             panel4.Controls.Add(panel6);
-            panel4.Location = new Point(509, 76);
+            panel4.Location = new Point(480, 61);
             panel4.Name = "panel4";
-            panel4.Size = new Size(230, 151);
+            panel4.Size = new Size(213, 135);
             panel4.TabIndex = 9;
             // 
             // panel6
@@ -280,7 +299,7 @@
             panel6.Controls.Add(label12);
             panel6.Location = new Point(3, 3);
             panel6.Name = "panel6";
-            panel6.Size = new Size(224, 145);
+            panel6.Size = new Size(207, 129);
             panel6.TabIndex = 1;
             // 
             // pictureBox3
@@ -315,20 +334,20 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label11.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             label11.Location = new Point(78, 47);
             label11.Name = "label11";
-            label11.Size = new Size(87, 38);
+            label11.Size = new Size(75, 32);
             label11.TabIndex = 4;
             label11.Text = "value";
             // 
             // label12
             // 
             label12.AutoSize = true;
-            label12.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label12.Location = new Point(82, 13);
+            label12.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
+            label12.Location = new Point(73, 13);
             label12.Name = "label12";
-            label12.Size = new Size(137, 20);
+            label12.Size = new Size(129, 19);
             label12.TabIndex = 2;
             label12.Text = "AIR TEMPERATURE";
             // 
@@ -337,9 +356,9 @@
             panel7.BackColor = Color.Gold;
             panel7.BackgroundImageLayout = ImageLayout.None;
             panel7.Controls.Add(panel8);
-            panel7.Location = new Point(757, 76);
+            panel7.Location = new Point(715, 61);
             panel7.Name = "panel7";
-            panel7.Size = new Size(230, 151);
+            panel7.Size = new Size(213, 135);
             panel7.TabIndex = 9;
             // 
             // panel8
@@ -353,7 +372,7 @@
             panel8.Controls.Add(label17);
             panel8.Location = new Point(3, 3);
             panel8.Name = "panel8";
-            panel8.Size = new Size(224, 145);
+            panel8.Size = new Size(207, 129);
             panel8.TabIndex = 1;
             // 
             // pictureBox4
@@ -388,46 +407,31 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label16.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             label16.Location = new Point(78, 47);
             label16.Name = "label16";
-            label16.Size = new Size(87, 38);
+            label16.Size = new Size(75, 32);
             label16.TabIndex = 4;
             label16.Text = "value";
             // 
             // label17
             // 
             label17.AutoSize = true;
-            label17.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label17.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold);
             label17.Location = new Point(78, 13);
             label17.Name = "label17";
-            label17.Size = new Size(144, 23);
+            label17.Size = new Size(121, 19);
             label17.TabIndex = 2;
             label17.Text = "LIGHT INTENSITY";
-            // 
-            // panel9
-            // 
-            panel9.BackColor = Color.WhiteSmoke;
-            panel9.Controls.Add(panel13);
-            panel9.Controls.Add(panel14);
-            panel9.Controls.Add(panel12);
-            panel9.Controls.Add(label18);
-            panel9.Controls.Add(panel10);
-            panel9.ImeMode = ImeMode.Hiragana;
-            panel9.Location = new Point(752, 258);
-            panel9.Name = "panel9";
-            panel9.Size = new Size(235, 309);
-            panel9.TabIndex = 11;
             // 
             // panel13
             // 
             panel13.Controls.Add(label25);
             panel13.Controls.Add(label22);
             panel13.Controls.Add(iconButton4);
-            panel13.Dock = DockStyle.Bottom;
-            panel13.Location = new Point(0, 49);
+            panel13.Location = new Point(18, 276);
             panel13.Name = "panel13";
-            panel13.Size = new Size(235, 65);
+            panel13.Size = new Size(212, 65);
             panel13.TabIndex = 25;
             // 
             // label25
@@ -462,7 +466,7 @@
             iconButton4.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButton4.IconSize = 25;
             iconButton4.ImageAlign = ContentAlignment.MiddleLeft;
-            iconButton4.Location = new Point(156, 8);
+            iconButton4.Location = new Point(150, 8);
             iconButton4.Margin = new Padding(3, 4, 3, 4);
             iconButton4.Name = "iconButton4";
             iconButton4.Padding = new Padding(11, 0, 0, 0);
@@ -476,10 +480,9 @@
             panel14.Controls.Add(label24);
             panel14.Controls.Add(label20);
             panel14.Controls.Add(iconButton5);
-            panel14.Dock = DockStyle.Bottom;
-            panel14.Location = new Point(0, 114);
+            panel14.Location = new Point(480, 276);
             panel14.Name = "panel14";
-            panel14.Size = new Size(235, 65);
+            panel14.Size = new Size(213, 65);
             panel14.TabIndex = 25;
             // 
             // label24
@@ -514,7 +517,7 @@
             iconButton5.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButton5.IconSize = 25;
             iconButton5.ImageAlign = ContentAlignment.MiddleLeft;
-            iconButton5.Location = new Point(156, 8);
+            iconButton5.Location = new Point(151, 8);
             iconButton5.Margin = new Padding(3, 4, 3, 4);
             iconButton5.Name = "iconButton5";
             iconButton5.Padding = new Padding(11, 0, 0, 0);
@@ -528,10 +531,9 @@
             panel12.Controls.Add(label23);
             panel12.Controls.Add(label19);
             panel12.Controls.Add(iconButton2);
-            panel12.Dock = DockStyle.Bottom;
-            panel12.Location = new Point(0, 179);
+            panel12.Location = new Point(246, 276);
             panel12.Name = "panel12";
-            panel12.Size = new Size(235, 65);
+            panel12.Size = new Size(213, 65);
             panel12.TabIndex = 24;
             // 
             // label23
@@ -566,7 +568,7 @@
             iconButton2.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButton2.IconSize = 25;
             iconButton2.ImageAlign = ContentAlignment.MiddleLeft;
-            iconButton2.Location = new Point(156, 8);
+            iconButton2.Location = new Point(143, 8);
             iconButton2.Margin = new Padding(3, 4, 3, 4);
             iconButton2.Name = "iconButton2";
             iconButton2.Padding = new Padding(11, 0, 0, 0);
@@ -575,35 +577,14 @@
             iconButton2.TextAlign = ContentAlignment.MiddleLeft;
             iconButton2.UseVisualStyleBackColor = false;
             // 
-            // label18
-            // 
-            label18.AutoSize = true;
-            label18.Font = new Font("Segoe UI", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label18.Location = new Point(5, 11);
-            label18.Name = "label18";
-            label18.Size = new Size(175, 25);
-            label18.TabIndex = 0;
-            label18.Text = "ACTIVE CONTROLS";
-            // 
-            // panel10
-            // 
-            panel10.Controls.Add(panel11);
-            panel10.Controls.Add(iconButton3);
-            panel10.Dock = DockStyle.Bottom;
-            panel10.Location = new Point(0, 244);
-            panel10.Name = "panel10";
-            panel10.Size = new Size(235, 65);
-            panel10.TabIndex = 22;
-            // 
             // panel11
             // 
             panel11.Controls.Add(iconButton1);
             panel11.Controls.Add(label26);
             panel11.Controls.Add(label21);
-            panel11.Dock = DockStyle.Bottom;
-            panel11.Location = new Point(0, 0);
+            panel11.Location = new Point(715, 276);
             panel11.Name = "panel11";
-            panel11.Size = new Size(235, 65);
+            panel11.Size = new Size(213, 65);
             panel11.TabIndex = 23;
             // 
             // iconButton1
@@ -618,7 +599,7 @@
             iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButton1.IconSize = 25;
             iconButton1.ImageAlign = ContentAlignment.MiddleLeft;
-            iconButton1.Location = new Point(156, 8);
+            iconButton1.Location = new Point(143, 8);
             iconButton1.Margin = new Padding(3, 4, 3, 4);
             iconButton1.Name = "iconButton1";
             iconButton1.Padding = new Padding(11, 0, 0, 0);
@@ -647,49 +628,272 @@
             label21.TabIndex = 13;
             label21.Text = "Grow Lights";
             // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Font = new Font("Bahnschrift SemiBold", 12F, FontStyle.Bold);
+            label27.ForeColor = Color.Gray;
+            label27.Location = new Point(171, 21);
+            label27.Name = "label27";
+            label27.Size = new Size(137, 24);
+            label27.TabIndex = 13;
+            label27.Text = "Current Batch";
+            // 
+            // panel9
+            // 
+            panel9.BackColor = Color.FromArgb(247, 247, 247);
+            panel9.Controls.Add(label30);
+            panel9.Controls.Add(panel11);
+            panel9.Controls.Add(label5);
+            panel9.Controls.Add(panel14);
+            panel9.Controls.Add(panel12);
+            panel9.Controls.Add(panel1);
+            panel9.Controls.Add(panel4);
+            panel9.Controls.Add(panel13);
+            panel9.Controls.Add(panel7);
+            panel9.Controls.Add(panel5);
+            panel9.Location = new Point(18, 240);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(957, 356);
+            panel9.TabIndex = 26;
+            
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Font = new Font("Bahnschrift SemiBold", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label30.Location = new Point(17, 222);
+            label30.Name = "label30";
+            label30.Size = new Size(204, 34);
+            label30.TabIndex = 26;
+            label30.Text = "Active controls";
+            // 
+            // panel10
+            // 
+            panel10.BackColor = Color.FromArgb(247, 247, 247);
+            panel10.Controls.Add(btnFinishBatch);
+            panel10.Controls.Add(iconButton3);
+            panel10.Controls.Add(btnNewBatch);
+            panel10.Controls.Add(lblBatchId);
+            panel10.Controls.Add(lblNumPlantsValue);
+            panel10.Controls.Add(lblPlantValue);
+            panel10.Controls.Add(lblPlantingDate);
+            panel10.Controls.Add(pictureBox8);
+            panel10.Controls.Add(pictureBox7);
+            panel10.Controls.Add(pictureBox6);
+            panel10.Controls.Add(label33);
+            panel10.Controls.Add(label32);
+            panel10.Controls.Add(label28);
+            panel10.Controls.Add(label18);
+            panel10.Controls.Add(pictureBox5);
+            panel10.Controls.Add(label27);
+            panel10.Location = new Point(18, 23);
+            panel10.Name = "panel10";
+            panel10.Size = new Size(957, 196);
+            panel10.TabIndex = 27;
+            // 
+            // btnFinishBatch
+            // 
+            btnFinishBatch.BackColor = Color.FromArgb(247, 77, 77);
+            btnFinishBatch.FlatAppearance.BorderSize = 0;
+            btnFinishBatch.FlatStyle = FlatStyle.Flat;
+            btnFinishBatch.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnFinishBatch.ForeColor = Color.WhiteSmoke;
+            btnFinishBatch.IconChar = FontAwesome.Sharp.IconChar.Close;
+            btnFinishBatch.IconColor = Color.WhiteSmoke;
+            btnFinishBatch.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnFinishBatch.IconSize = 25;
+            btnFinishBatch.ImageAlign = ContentAlignment.MiddleLeft;
+            btnFinishBatch.Location = new Point(762, 87);
+            btnFinishBatch.Margin = new Padding(3, 4, 3, 4);
+            btnFinishBatch.Name = "btnFinishBatch";
+            btnFinishBatch.Padding = new Padding(11, 0, 0, 0);
+            btnFinishBatch.Size = new Size(166, 36);
+            btnFinishBatch.TabIndex = 29;
+            btnFinishBatch.Text = "Finish batch";
+            btnFinishBatch.TextAlign = ContentAlignment.MiddleLeft;
+            btnFinishBatch.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnFinishBatch.UseVisualStyleBackColor = false;
+            btnFinishBatch.Click += btnFinishBatch_Click;
+            // 
             // iconButton3
             // 
-            iconButton3.BackColor = Color.WhiteSmoke;
+            iconButton3.BackColor = Color.LightGray;
             iconButton3.FlatAppearance.BorderSize = 0;
             iconButton3.FlatStyle = FlatStyle.Flat;
             iconButton3.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             iconButton3.ForeColor = Color.WhiteSmoke;
-            iconButton3.IconChar = FontAwesome.Sharp.IconChar.PowerOff;
-            iconButton3.IconColor = Color.Black;
+            iconButton3.IconChar = FontAwesome.Sharp.IconChar.List12;
+            iconButton3.IconColor = Color.WhiteSmoke;
             iconButton3.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButton3.IconSize = 25;
             iconButton3.ImageAlign = ContentAlignment.MiddleLeft;
-            iconButton3.Location = new Point(156, 8);
+            iconButton3.Location = new Point(762, 146);
             iconButton3.Margin = new Padding(3, 4, 3, 4);
             iconButton3.Name = "iconButton3";
             iconButton3.Padding = new Padding(11, 0, 0, 0);
-            iconButton3.Size = new Size(59, 47);
-            iconButton3.TabIndex = 18;
+            iconButton3.Size = new Size(166, 37);
+            iconButton3.TabIndex = 28;
+            iconButton3.Text = "Batch history";
             iconButton3.TextAlign = ContentAlignment.MiddleLeft;
+            iconButton3.TextImageRelation = TextImageRelation.ImageBeforeText;
             iconButton3.UseVisualStyleBackColor = false;
+            iconButton3.Click += btnBatchHistory_Click;
             // 
-            // label27
+            // btnNewBatch
             // 
-            label27.AutoSize = true;
-            label27.Font = new Font("Bahnschrift SemiBold", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label27.Location = new Point(16, 246);
-            label27.Name = "label27";
-            label27.Size = new Size(196, 34);
-            label27.TabIndex = 13;
-            label27.Text = "Data Analytics";
+            btnNewBatch.BackColor = Color.FromArgb(84, 86, 240);
+            btnNewBatch.FlatAppearance.BorderSize = 0;
+            btnNewBatch.FlatStyle = FlatStyle.Flat;
+            btnNewBatch.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnNewBatch.ForeColor = Color.WhiteSmoke;
+            btnNewBatch.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            btnNewBatch.IconColor = Color.WhiteSmoke;
+            btnNewBatch.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnNewBatch.IconSize = 25;
+            btnNewBatch.ImageAlign = ContentAlignment.MiddleLeft;
+            btnNewBatch.Location = new Point(762, 21);
+            btnNewBatch.Margin = new Padding(3, 4, 3, 4);
+            btnNewBatch.Name = "btnNewBatch";
+            btnNewBatch.Padding = new Padding(11, 0, 0, 0);
+            btnNewBatch.Size = new Size(166, 37);
+            btnNewBatch.TabIndex = 27;
+            btnNewBatch.Text = "New batch";
+            btnNewBatch.TextAlign = ContentAlignment.MiddleLeft;
+            btnNewBatch.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnNewBatch.UseVisualStyleBackColor = false;
+            btnNewBatch.Click += btnNewBatch_Click;
+            // 
+            // lblBatchId
+            // 
+            lblBatchId.AutoSize = true;
+            lblBatchId.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
+            lblBatchId.Location = new Point(267, 60);
+            lblBatchId.Name = "lblBatchId";
+            lblBatchId.Size = new Size(82, 37);
+            lblBatchId.TabIndex = 26;
+            lblBatchId.Text = "value";
+            // 
+            // lblNumPlantsValue
+            // 
+            lblNumPlantsValue.AutoSize = true;
+            lblNumPlantsValue.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            lblNumPlantsValue.Location = new Point(569, 146);
+            lblNumPlantsValue.Name = "lblNumPlantsValue";
+            lblNumPlantsValue.Size = new Size(60, 28);
+            lblNumPlantsValue.TabIndex = 25;
+            lblNumPlantsValue.Text = "value";
+            // 
+            // lblPlantValue
+            // 
+            lblPlantValue.AutoSize = true;
+            lblPlantValue.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            lblPlantValue.Location = new Point(410, 146);
+            lblPlantValue.Name = "lblPlantValue";
+            lblPlantValue.Size = new Size(60, 28);
+            lblPlantValue.TabIndex = 24;
+            lblPlantValue.Text = "value";
+            // 
+            // lblPlantingDate
+            // 
+            lblPlantingDate.AutoSize = true;
+            lblPlantingDate.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
+            lblPlantingDate.Location = new Point(219, 146);
+            lblPlantingDate.Name = "lblPlantingDate";
+            lblPlantingDate.Size = new Size(60, 28);
+            lblPlantingDate.TabIndex = 23;
+            lblPlantingDate.Text = "value";
+            // 
+            // pictureBox8
+            // 
+            pictureBox8.Image = (Image)resources.GetObject("pictureBox8.Image");
+            pictureBox8.Location = new Point(523, 126);
+            pictureBox8.Name = "pictureBox8";
+            pictureBox8.Size = new Size(40, 45);
+            pictureBox8.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox8.TabIndex = 22;
+            pictureBox8.TabStop = false;
+            // 
+            // pictureBox7
+            // 
+            pictureBox7.Image = (Image)resources.GetObject("pictureBox7.Image");
+            pictureBox7.Location = new Point(364, 126);
+            pictureBox7.Name = "pictureBox7";
+            pictureBox7.Size = new Size(40, 45);
+            pictureBox7.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox7.TabIndex = 21;
+            pictureBox7.TabStop = false;
+            // 
+            // pictureBox6
+            // 
+            pictureBox6.Image = Properties.Resources.Screenshot_2026_06_20_211210;
+            pictureBox6.Location = new Point(173, 126);
+            pictureBox6.Name = "pictureBox6";
+            pictureBox6.Size = new Size(40, 45);
+            pictureBox6.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox6.TabIndex = 20;
+            pictureBox6.TabStop = false;
+            // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            label33.ForeColor = Color.Gray;
+            label33.Location = new Point(410, 113);
+            label33.Name = "label33";
+            label33.Size = new Size(49, 23);
+            label33.TabIndex = 19;
+            label33.Text = "Plant";
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            label32.ForeColor = Color.Gray;
+            label32.Location = new Point(569, 113);
+            label32.Name = "label32";
+            label32.Size = new Size(145, 23);
+            label32.TabIndex = 18;
+            label32.Text = "Number of plants";
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Font = new Font("Segoe UI Semibold", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label28.ForeColor = Color.Gray;
+            label28.Location = new Point(219, 113);
+            label28.Name = "label28";
+            label28.Size = new Size(112, 23);
+            label28.TabIndex = 11;
+            label28.Text = "Planting date";
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new Font("Segoe UI Semibold", 16F, FontStyle.Bold);
+            label18.Location = new Point(171, 60);
+            label18.Name = "label18";
+            label18.Size = new Size(100, 37);
+            label18.TabIndex = 11;
+            label18.Text = "BATCH";
+            // 
+            // pictureBox5
+            // 
+            pictureBox5.Image = (Image)resources.GetObject("pictureBox5.Image");
+            pictureBox5.Location = new Point(18, 21);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(139, 154);
+            pictureBox5.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox5.TabIndex = 14;
+            pictureBox5.TabStop = false;
             // 
             // dashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(999, 620);
-            Controls.Add(label27);
             Controls.Add(panel9);
-            Controls.Add(panel4);
-            Controls.Add(panel1);
-            Controls.Add(panel7);
-            Controls.Add(label5);
-            Controls.Add(panel5);
+            Controls.Add(panel10);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(3, 4, 3, 4);
             Name = "dashboard";
@@ -710,19 +914,23 @@
             panel8.ResumeLayout(false);
             panel8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
-            panel9.ResumeLayout(false);
-            panel9.PerformLayout();
             panel13.ResumeLayout(false);
             panel13.PerformLayout();
             panel14.ResumeLayout(false);
             panel14.PerformLayout();
             panel12.ResumeLayout(false);
             panel12.PerformLayout();
-            panel10.ResumeLayout(false);
             panel11.ResumeLayout(false);
             panel11.PerformLayout();
+            panel9.ResumeLayout(false);
+            panel9.PerformLayout();
+            panel10.ResumeLayout(false);
+            panel10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -756,16 +964,12 @@
         private PictureBox pictureBox3;
         private PictureBox pictureBox4;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private Panel panel9;
         private Label label21;
-        private Label label18;
-        private FontAwesome.Sharp.IconButton iconButton3;
         private Label label26;
         private Panel panel14;
         private FontAwesome.Sharp.IconButton iconButton5;
         private Panel panel12;
         private FontAwesome.Sharp.IconButton iconButton2;
-        private Panel panel10;
         private Panel panel11;
         private FontAwesome.Sharp.IconButton iconButton1;
         private Panel panel13;
@@ -777,5 +981,23 @@
         private Label label23;
         private Label label19;
         private Label label27;
+        private Panel panel9;
+        private Panel panel10;
+        private Label label18;
+        private PictureBox pictureBox5;
+        private Label label28;
+        private Label label33;
+        private Label label32;
+        private Label lblPlantingDate;
+        private PictureBox pictureBox8;
+        private PictureBox pictureBox7;
+        private PictureBox pictureBox6;
+        private Label lblBatchId;
+        private Label lblNumPlantsValue;
+        private Label lblPlantValue;
+        private FontAwesome.Sharp.IconButton iconButton3;
+        private FontAwesome.Sharp.IconButton btnNewBatch;
+        private Label label30;
+        private FontAwesome.Sharp.IconButton btnFinishBatch;
     }
 }

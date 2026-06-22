@@ -32,18 +32,23 @@ if (!modoSimulacion)
     }
     catch (Exception ex)
     {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"No se pudo conectar a {comPort}: {ex.Message}");
-        modoSimulacion = true;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"ERROR: No se pudo conectar al Arduino en {comPort}.");
+        Console.WriteLine($"Detalle: {ex.Message}");
+        Console.ResetColor();
+        Console.WriteLine("Conecta el Arduino y ejecuta de nuevo, o usa --simulate para simular.\n");
+        Console.WriteLine("Presiona cualquier tecla para salir...");
+        Console.ReadKey();
+        return;
     }
 }
 
 if (modoSimulacion)
 {
     Console.ForegroundColor = ConsoleColor.DarkYellow;
-    Console.WriteLine("MODO SIMULACION activado. Generando datos cada 5 segundos.");
+    Console.WriteLine("MODO SIMULACION activado. Generando datos cada 2 segundos.");
     Console.ResetColor();
-    Console.WriteLine("(Usa --simulate para forzar, o conecta el Arduino para modo real)\n");
+    Console.WriteLine("(Conecta el Arduino y ejecuta sin --simulate para modo real)\n");
 }
 
 Console.WriteLine($"SQL Server: {connectionString}");
@@ -54,8 +59,9 @@ while (true)
 {
     try
     {
-        float temp, humAire;
-        int humSuelo, luz, bomba, vent, humi, lampara;
+        float temp = 0, humAire = 0;
+        int humSuelo = 0, luz = 0, bomba = 0, vent = 0, humi = 0, lampara = 0;
+        bool hayDatos = false;
 
         if (!modoSimulacion && port != null && port.IsOpen)
         {
@@ -74,23 +80,23 @@ while (true)
             vent = parts.Length > 5 ? int.Parse(parts[5]) : 0;
             humi = parts.Length > 6 ? int.Parse(parts[6]) : 0;
             lampara = parts.Length > 7 ? int.Parse(parts[7]) : 0;
+            hayDatos = true;
         }
-        else
+        else if (modoSimulacion)
         {
             // === MODO SIMULACION: Generar datos realistas ===
             cicloSimulacion++;
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
 
-            temp = 28.0f + (float)(rnd.NextDouble() * 4.0 - 2.0);         // 26-30°C
-            humAire = 60.0f + (float)(rnd.NextDouble() * 10.0 - 5.0);     // 55-65%
-            humSuelo = 65 + rnd.Next(-10, 10);                              // 55-75%
-            luz = 15000 + rnd.Next(-5000, 5000);                            // 10000-20000 lx
-
-            // Simular actuadores según condiciones
+            temp = 28.0f + (float)(rnd.NextDouble() * 4.0 - 2.0);
+            humAire = 60.0f + (float)(rnd.NextDouble() * 10.0 - 5.0);
+            humSuelo = 65 + rnd.Next(-10, 10);
+            luz = 15000 + rnd.Next(-5000, 5000);
             bomba = humSuelo < 30 ? 1 : 0;
             vent = temp > 30.0 ? 1 : 0;
             humi = humAire < 40.0 ? 1 : 0;
             lampara = luz < 200 ? 1 : 0;
+            hayDatos = true;
 
             if (cicloSimulacion % 5 == 0)
             {
@@ -99,6 +105,8 @@ while (true)
                 Console.ResetColor();
             }
         }
+
+        if (!hayDatos) continue;
 
         // === INSERTAR EN SQL SERVER ===
         DateTime ahora = DateTime.Now;
@@ -148,6 +156,14 @@ while (true)
     }
     catch (TimeoutException) { /* Sin datos serial, continuar */ }
     catch (FormatException ex) { Console.WriteLine($"Error formato: {ex.Message}"); }
+    catch (InvalidOperationException)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("\nERROR: Arduino desconectado. No se insertarán más datos.");
+        Console.WriteLine("Conecta el Arduino y ejecuta de nuevo.");
+        Console.ResetColor();
+        break;
+    }
     catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); Thread.Sleep(1000); }
 }
 

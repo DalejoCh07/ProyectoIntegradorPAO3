@@ -16,19 +16,19 @@ namespace AgroControl
     public partial class Interfaz : Form
     {
         private Usuario _usuarioLogueado; // Variable para guardar quién entró
-
+        private int _idInvernaderoActivo = 1;
         public Interfaz()
         {
             InitializeComponent();
         }
 
         // Modificamos el constructor para que reciba al usuario
-        public Interfaz(Usuario usuarioQueIngreso)
+        public Interfaz(Usuario usuarioQueIngreso, int idInvernadero, string nombreInvernadero)
         {
             InitializeComponent();
             _usuarioLogueado = usuarioQueIngreso;
-            label2.Text = _usuarioLogueado.Nombre;
-            iconButton2.Text = _usuarioLogueado.Nombre;
+            _idInvernaderoActivo = idInvernadero;
+            btnUser.Text = _usuarioLogueado.Nombre;
             this.Text = "Panel Principal - Usuario: " + _usuarioLogueado.Nombre;
         }
 
@@ -69,7 +69,7 @@ namespace AgroControl
         private void btnDasboard_Click(object sender, EventArgs e)
         {
             label1.Text = "Dashboard";
-            openSonForm(new dashboard());
+            openSonForm(new dashboard(_idInvernaderoActivo));
         }
 
         private void iconButton1_Click(object sender, EventArgs e)
@@ -91,13 +91,14 @@ namespace AgroControl
         private void btnReadingLog_Click(object sender, EventArgs e)
         {
             label1.Text = "Reading Log";
-            openSonForm(new readingLog());
+            openSonForm(new readingLog(_idInvernaderoActivo)); ;
         }
 
         private void btnCharts_Click(object sender, EventArgs e)
         {
+            
             label1.Text = "Charts";
-            openSonForm(new charts());
+            openSonForm(new charts(_idInvernaderoActivo));
         }
 
         private void btnPlantRecords_Click(object sender, EventArgs e)
@@ -106,10 +107,11 @@ namespace AgroControl
             openSonForm(new plantRecord());
         }
 
-        private void btnSettings_Click(object sender, EventArgs e)
+        private void btnUser_Click(object sender, EventArgs e)
         {
-            label1.Text = "Settings";
-            openSonForm(new users());
+            // Pasamos el usuario que ya tenemos en la interfaz al nuevo formulario
+            user ventanaConfig = new user(_usuarioLogueado);
+            ventanaConfig.Show();
         }
 
         private void btnHelp_Click(object sender, EventArgs e)

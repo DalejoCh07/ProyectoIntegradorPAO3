@@ -22,3 +22,4 @@ C:\Users\daalc\source\repos\AgroControl\DataAccess\obj\Debug\net8.0\DataAccess.d
 C:\Users\daalc\source\repos\AgroControl\DataAccess\obj\Debug\net8.0\refint\DataAccess.dll
 C:\Users\daalc\source\repos\AgroControl\DataAccess\obj\Debug\net8.0\DataAccess.pdb
 C:\Users\daalc\source\repos\AgroControl\DataAccess\obj\Debug\net8.0\ref\DataAccess.dll
+C:\Users\daalc\source\repos\AgroControl\DataAccess\obj\Debug\net8.0\DataAccess.sourcelink.json

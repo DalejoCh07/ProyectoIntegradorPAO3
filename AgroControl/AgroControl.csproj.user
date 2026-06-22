@@ -10,7 +10,31 @@
     <Compile Update="charts.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="historyBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="interfaz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="newActuator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="newBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="newGreenhouse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="newPlant.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="newSensor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="newUser.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="plantRecord.cs">
@@ -19,7 +43,13 @@
     <Compile Update="readingLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="settings.cs">
+    <Compile Update="technical.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="adminUsers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="user.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

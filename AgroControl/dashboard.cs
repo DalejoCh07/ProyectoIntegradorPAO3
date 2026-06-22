@@ -4,18 +4,24 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using DataAccess;
+using BusinessLogic;
+using Entities;
 
 namespace AgroControl
 {
     public partial class dashboard : Form
     {
         private System.Windows.Forms.Timer refreshTimer;
+        private int _idInvernadero;
+        private Batch loteActivoActual;
 
-        public dashboard()
+        public dashboard(int idInvernadero)
         {
             InitializeComponent();
+            _idInvernadero = idInvernadero;
             CargarLecturas();
             CargarEstadoActuadores();
+            CargarLoteActivo();
 
             iconButton4.Click += (s, e) => ToggleActuador(1, "Bomba de Riego");
             iconButton5.Click += (s, e) => ToggleActuador(2, "Ventilador");
@@ -24,8 +30,79 @@ namespace AgroControl
 
             refreshTimer = new System.Windows.Forms.Timer();
             refreshTimer.Interval = 5000;
-            refreshTimer.Tick += (s, e) => { CargarLecturas(); CargarEstadoActuadores(); };
+            refreshTimer.Tick += (s, e) => { CargarLecturas(); CargarEstadoActuadores(); CargarLoteActivo(); };
             refreshTimer.Start();
+        }
+
+        private void CargarLoteActivo()
+        {
+            loteActivoActual = BatchBus.obtenerLoteActivo(_idInvernadero);
+
+            if (loteActivoActual != null)
+            {
+                lblBatchId.Text = loteActivoActual.IdLote.ToString();
+                lblPlantingDate.Text = loteActivoActual.FechaSiembra.ToString("dd/MM/yyyy");
+                lblPlantValue.Text = loteActivoActual.NombrePlanta;
+                lblNumPlantsValue.Text = loteActivoActual.CantPlantas.ToString();
+                btnNewBatch.Enabled = true;
+                btnFinishBatch.Enabled = true;
+            }
+            else
+            {
+                lblBatchId.Text = "-";
+                lblPlantingDate.Text = "N/A";
+                lblPlantValue.Text = "N/A";
+                lblNumPlantsValue.Text = "N/A";
+                btnNewBatch.Enabled = true;
+                btnFinishBatch.Enabled = false;
+            }
+        }
+
+        private void btnNewBatch_Click(object sender, EventArgs e)
+        {
+            if (loteActivoActual != null)
+            {
+                MessageBox.Show("Primero debe finalizar el lote actual antes de crear uno nuevo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (newBatch frm = new newBatch(_idInvernadero))
+            {
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    CargarLoteActivo();
+                }
+            }
+        }
+
+        private void btnFinishBatch_Click(object sender, EventArgs e)
+        {
+            if (loteActivoActual != null)
+            {
+                DialogResult result = MessageBox.Show("¿Está seguro de finalizar el lote actual? Se registrará la cosecha con la fecha de hoy.", "Confirmar Cosecha", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    try
+                    {
+                        BatchBus.finalizarLote(loteActivoActual.IdLote);
+                        MessageBox.Show("Lote finalizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CargarLoteActivo();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al finalizar el lote: " + ex.Message, "Error");
+                    }
+                }
+            }
+        }
+
+        private void btnBatchHistory_Click(object sender, EventArgs e)
+        {
+            using (historyBatch frm = new historyBatch(_idInvernadero))
+            {
+                frm.ShowDialog();
+            }
         }
 
         private void CargarLecturas()
@@ -57,8 +134,17 @@ namespace AgroControl
 
         private decimal ObtenerUltimaLectura(int idSensor)
         {
-            string sql = "SELECT TOP 1 valor FROM LECTURA WHERE idSensor = @id ORDER BY fechaHora DESC";
-            List<SqlParameter> parametros = new List<SqlParameter> { new SqlParameter("@id", idSensor) };
+            string sql = @"
+                SELECT TOP 1 L.valor
+                FROM LECTURA L
+                INNER JOIN SENSOR S ON L.idSensor = S.idSensor
+                WHERE S.idInvernadero = @idInv AND L.idSensor = @idSensor
+                ORDER BY L.fechaHora DESC";
+            List<SqlParameter> parametros = new List<SqlParameter>
+            {
+                new SqlParameter("@idInv", _idInvernadero),
+                new SqlParameter("@idSensor", idSensor)
+            };
             DataTable dt = DataAccess.DataAccess.getQuery(sql, parametros);
             if (dt.Rows.Count > 0)
                 return Convert.ToDecimal(dt.Rows[0]["valor"]);
@@ -75,8 +161,12 @@ namespace AgroControl
 
         private string ObtenerEstadoActuador(int idActuador)
         {
-            string sql = "SELECT estado FROM ACTUADOR WHERE idActuador = @id";
-            List<SqlParameter> parametros = new List<SqlParameter> { new SqlParameter("@id", idActuador) };
+            string sql = "SELECT estado FROM ACTUADOR WHERE idActuador = @id AND idInvernadero = @idInv";
+            List<SqlParameter> parametros = new List<SqlParameter>
+            {
+                new SqlParameter("@id", idActuador),
+                new SqlParameter("@idInv", _idInvernadero)
+            };
             DataTable dt = DataAccess.DataAccess.getQuery(sql, parametros);
             if (dt.Rows.Count > 0)
                 return dt.Rows[0]["estado"].ToString().ToLower();
@@ -97,11 +187,12 @@ namespace AgroControl
             {
                 string estadoActual = ObtenerEstadoActuador(idActuador);
                 string nuevoEstado = estadoActual == "on" ? "OFF" : "ON";
-                string sql = "UPDATE ACTUADOR SET estado = @estado WHERE idActuador = @id";
+                string sql = "UPDATE ACTUADOR SET estado = @estado WHERE idActuador = @id AND idInvernadero = @idInv";
                 List<SqlParameter> parametros = new List<SqlParameter>
                 {
                     new SqlParameter("@estado", nuevoEstado),
-                    new SqlParameter("@id", idActuador)
+                    new SqlParameter("@id", idActuador),
+                    new SqlParameter("@idInv", _idInvernadero)
                 };
                 DataAccess.DataAccess.execQuery(sql, parametros);
                 CargarEstadoActuadores();

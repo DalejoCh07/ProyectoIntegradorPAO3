@@ -1,4 +1,6 @@
-﻿using DataAccess; // Referencia a tu clase DataAccess
+﻿using System.Security.Cryptography;
+using System.Text;
+using DataAccess; // Referencia a tu clase DataAccess
 using Entities; // Referencia a tu capa de entidades
 using System.Data;
 using System.Data.SqlClient;
@@ -38,5 +40,50 @@ namespace BusinessLogic
                 return null;
             }
         }
+
+        // Agrega este método dentro de tu clase UsuarioBus existente
+        public static void insertar(Usuario usuario)
+        {
+            string sql = "INSERT INTO USUARIOS (nombre, contrasena, tipoUsuario) VALUES (@nombre, @password, @rol)";
+
+            List<SqlParameter> parametros = new List<SqlParameter>();
+            parametros.Add(new SqlParameter("@nombre", usuario.Nombre));
+            parametros.Add(new SqlParameter("@password", usuario.Contrasena)); // Ajusta "Contrasena" si tu propiedad se llama distinto en la Entidad
+            parametros.Add(new SqlParameter("@rol", usuario.TipoUsuario));
+
+            DataAccess.DataAccess.execQuery(sql, parametros);
+        }
+        public static DataTable getUsuarios(string filtro = "")
+        {
+            string sql;
+            List<SqlParameter> parametros = new List<SqlParameter>();
+
+            if (string.IsNullOrEmpty(filtro))
+            {
+                sql = "SELECT idUsuario, nombre, tipoUsuario FROM USUARIOS ORDER BY nombre";
+            }
+            else
+            {
+                sql = "SELECT idUsuario, nombre, tipoUsuario FROM USUARIOS WHERE nombre LIKE @filtro ORDER BY nombre";
+                parametros.Add(new SqlParameter("@filtro", "%" + filtro + "%"));
+            }
+
+            return parametros.Count > 0
+                ? DataAccess.DataAccess.getQuery(sql, parametros)
+                : DataAccess.DataAccess.getQuery(sql);
+        }
+
+        // Método para eliminar un usuario por su ID
+        public static void eliminar(int idUsuario)
+        {
+            string sql = "DELETE FROM USUARIOS WHERE idUsuario = @id";
+            List<SqlParameter> parametros = new List<SqlParameter>
+            {
+                new SqlParameter("@id", idUsuario)
+            };
+
+            DataAccess.DataAccess.execQuery(sql, parametros);
+        }
+
     }
 }

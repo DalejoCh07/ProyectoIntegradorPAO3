@@ -183,6 +183,46 @@ namespace AgroControl.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Screenshot_2026_06_20_205358 {
+            get {
+                object obj = ResourceManager.GetObject("Screenshot 2026-06-20 205358", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Screenshot_2026_06_20_211210 {
+            get {
+                object obj = ResourceManager.GetObject("Screenshot 2026-06-20 211210", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Screenshot_2026_06_22_130902 {
+            get {
+                object obj = ResourceManager.GetObject("Screenshot 2026-06-22 130902", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Screenshot_2026_06_22_143714 {
+            get {
+                object obj = ResourceManager.GetObject("Screenshot 2026-06-22 143714", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap soil {
             get {
                 object obj = ResourceManager.GetObject("soil", resourceCulture);
@@ -206,6 +246,16 @@ namespace AgroControl.Properties {
         internal static System.Drawing.Bitmap termometer {
             get {
                 object obj = ResourceManager.GetObject("termometer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap user {
+            get {
+                object obj = ResourceManager.GetObject("user", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -14,58 +14,92 @@ namespace AgroControl
 {
     public partial class readingLog : Form
     {
-        public readingLog()
+        private int _idInvernadero;
+        public readingLog(int idInvernadero)
         {
             InitializeComponent();
+            _idInvernadero = idInvernadero;
             CargarHistorialLecturas();
+            CargarRegistroAcciones();
         }
 
         private void CargarHistorialLecturas()
         {
             try
             {
-                // Se añade el filtro CASE WHEN para el tipo 'luz'
-                string sql = @"
-            SELECT 
-                L.fechaHora AS 'Fecha y hora',
-                MAX(CASE WHEN S.tipo = 'humSuelo' THEN L.valor END) AS 'Humedad del suelo',
-                MAX(CASE WHEN S.tipo = 'tempAire' THEN L.valor END) AS 'Temperatura',
-                MAX(CASE WHEN S.tipo = 'humAire' THEN L.valor END) AS 'Humedad del aire',
-                MAX(CASE WHEN S.tipo = 'luz' THEN L.valor END) AS 'Intensidad de luz'
-            FROM LECTURA L
-            INNER JOIN SENSOR S ON L.idSensor = S.idSensor
-            GROUP BY L.fechaHora
-            ORDER BY L.fechaHora DESC";
+                // 1. Llamamos directamente a la capa de negocio (Cero SQL en la interfaz)
+                DataTable dtLecturas = ReadingBus.getHistorialPivot(_idInvernadero);
 
-                // Llamado a la base de datos usando tu método funcional
-                DataTable dtLecturas = DataAccess.DataAccess.getQuery(sql);
+                // 2. Inyectamos los datos limpios al DataGridView
+                dgvReadings.DataSource = dtLecturas;
 
-                // Inyección de los datos al DataGridView
-                dgvGrid.DataSource = dtLecturas;
+                // 3. Aplicamos los formatos visuales específicos a cada columna
+                if (dgvReadings.Columns.Contains("Fecha y hora"))
+                    dgvReadings.Columns["Fecha y hora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
 
-                // Formatos de datos para cada columna
-                if (dgvGrid.Columns.Contains("Fecha y hora"))
-                    dgvGrid.Columns["Fecha y hora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+                if (dgvReadings.Columns.Contains("Humedad del suelo"))
+                    dgvReadings.Columns["Humedad del suelo"].DefaultCellStyle.Format = "0' %'";
 
-                if (dgvGrid.Columns.Contains("Humedad del suelo"))
-                    dgvGrid.Columns["Humedad del suelo"].DefaultCellStyle.Format = "0' %'";
+                if (dgvReadings.Columns.Contains("Temperatura"))
+                    dgvReadings.Columns["Temperatura"].DefaultCellStyle.Format = "0.0' °C'";
 
-                if (dgvGrid.Columns.Contains("Temperatura"))
-                    dgvGrid.Columns["Temperatura"].DefaultCellStyle.Format = "0.0' °C'";
+                if (dgvReadings.Columns.Contains("Humedad del aire"))
+                    dgvReadings.Columns["Humedad del aire"].DefaultCellStyle.Format = "0' %'";
 
-                if (dgvGrid.Columns.Contains("Humedad del aire"))
-                    dgvGrid.Columns["Humedad del aire"].DefaultCellStyle.Format = "0' %'";
+                if (dgvReadings.Columns.Contains("Intensidad de luz"))
+                    dgvReadings.Columns["Intensidad de luz"].DefaultCellStyle.Format = "0.0' lx'";
 
-                if (dgvGrid.Columns.Contains("Intensidad de luz"))
-                    dgvGrid.Columns["Intensidad de luz"].DefaultCellStyle.Format = "0.0' lx'"; // lx representa Luxes
+                // Truco de simetría: Mismo comportamiento de llenado elástico que el registro de acciones
+                dgvReadings.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar los datos en el sistema: " + ex.Message, "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        
 
+        private void CargarRegistroAcciones()
+        {
+            try
+            {
+                // 1. Llamamos a la capa de negocio para obtener la lista de objetos
+                List<Accion> historial = AccionBus.getAccionesPorInvernadero(_idInvernadero);
 
+                // 2. Inyectamos la lista directamente al DataGridView
+                dgvActions.DataSource = historial;
+
+                // 3. Ajustamos la estética de las columnas generadas automáticamente
+
+                // Ocultamos los IDs internos para que el usuario final no los vea
+                if (dgvActions.Columns.Contains("IdAccion"))
+                    dgvActions.Columns["IdAccion"].Visible = false;
+
+                if (dgvActions.Columns.Contains("IdActuador"))
+                    dgvActions.Columns["IdActuador"].Visible = false;
+
+                // Renombramos las cabeceras para que se vean amigables
+                if (dgvActions.Columns.Contains("TipoAccion"))
+                    dgvActions.Columns["TipoAccion"].HeaderText = "Acción Realizada";
+
+                if (dgvActions.Columns.Contains("Duracion"))
+                    dgvActions.Columns["Duracion"].HeaderText = "Duración";
+
+                // Formateamos la fecha y renombramos la cabecera
+                if (dgvActions.Columns.Contains("FechaHora"))
+                {
+                    dgvActions.Columns["FechaHora"].HeaderText = "Fecha y Hora";
+                    dgvActions.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+                }
+
+                // Hacemos que las columnas visibles se estiren para llenar el espacio
+                dgvActions.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar el registro de acciones: " + ex.Message, "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void dgvDatosSensores_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

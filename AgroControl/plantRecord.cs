@@ -20,6 +20,11 @@ namespace AgroControl
             InitializeComponent();
             CargarContenidoPlantas();
             CargarSelectorDePlantas();
+            btnDasboard.Click += BtnSearch_Click;
+            iconButton2.Click += BtnDelete_Click;
+            textBox1.KeyDown += TxtSearch_KeyDown;
+            textBox1.Enter += TxtSearch_Enter;
+            textBox1.Leave += TxtSearch_Leave;
         }
         private void CargarContenidoPlantas()
         {
@@ -119,87 +124,19 @@ namespace AgroControl
                 MessageBox.Show("Error loading requirements: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        /*
-        // 3. Botón para guardar un nuevo requerimiento
-        private void btnGuardarRequerimiento_Click(object sender, EventArgs e)
+
+        private void btnNewPlant_Click(object sender, EventArgs e)
         {
-            try
+            using (newPlant ventanaConfig = new newPlant())
             {
-                if (cmbPlantas.SelectedItem == null)
+                if (ventanaConfig.ShowDialog() == DialogResult.OK)
                 {
-                    MessageBox.Show("Seleccione una planta primero.");
-                    return;
-                }
-
-                Planta plantaSeleccionada = (Planta)cmbPlantas.SelectedItem;
-
-                Requerimiento nuevoReq = new Requerimiento();
-                nuevoReq.IdPlanta = plantaSeleccionada.IdPlanta; // Toma el ID directo del ComboBox
-                nuevoReq.Tipo = txtTipoReq.Text.Trim(); // Ej: 'humSuelo'
-                nuevoReq.ValorMinimo = Convert.ToDecimal(txtMinimo.Text);
-                nuevoReq.ValorMaximo = Convert.ToDecimal(txtMaximo.Text);
-
-                int resultado = FRequerimiento.insertar(nuevoReq);
-
-                if (resultado > 0)
-                {
-                    MessageBox.Show("Requerimiento asignado a la planta correctamente.");
-                    // Refrescamos la tabla para ver el nuevo registro
-                    CargarTablaRequerimientos(plantaSeleccionada.IdPlanta);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Verifique los datos numéricos ingresados. " + ex.Message, "Error");
-            }
-        }
-        */
-
-        /*
-        // Evento click del botón para registrar
-        private void btnIngresarPlanta_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Validar que los campos obligatorios contengan texto
-                if (string.IsNullOrEmpty(txtNombre.Text.Trim()) || string.IsNullOrEmpty(txtNombreCien.Text.Trim()))
-                {
-                    MessageBox.Show("El nombre común y el nombre científico son requeridos.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Mapeo del contenido de los controles a la entidad
-                Planta nuevaPlanta = new Planta();
-                nuevaPlanta.Nombre = txtNombre.Text.Trim();
-                nuevaPlanta.NombreCien = txtNombreCien.Text.Trim();
-                nuevaPlanta.Descripcion = txtDescripcion.Text.Trim();
-
-                // Envío a la capa de negocio
-                int resultado = FPlanta.insertar(nuevaPlanta);
-
-                if (resultado > 0)
-                {
-                    MessageBox.Show("Planta registrada correctamente en el catálogo.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Limpieza básica de las cajas de texto
-                    txtNombre.Clear();
-                    txtNombreCien.Clear();
-                    txtDescripcion.Clear();
-
-                    // Actualización automática de los datos en pantalla
                     CargarContenidoPlantas();
+                    CargarSelectorDePlantas();
                 }
-                else
-                {
-                    MessageBox.Show("No se pudo completar el registro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ocurrió un error al procesar el registro: " + ex.Message, "Error General", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        */
+
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -215,9 +152,91 @@ namespace AgroControl
 
         }
 
-        private void label8_Click(object sender, EventArgs e)
+        private void BtnSearch_Click(object sender, EventArgs e)
         {
+            string busqueda = textBox1.Text.Trim();
+            if (string.IsNullOrEmpty(busqueda) || busqueda == "Buscar planta")
+            {
+                CargarContenidoPlantas();
+            }
+            else
+            {
+                try
+                {
+                    List<Plant> lista = PlantBus.buscar(busqueda);
+                    dgvPlants.DataSource = lista;
+                    if (dgvPlants.Columns.Contains("IdPlanta"))
+                        dgvPlants.Columns["IdPlanta"].Visible = false;
+                    if (dgvPlants.Columns.Contains("Descripcion"))
+                        dgvPlants.Columns["Descripcion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al buscar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
 
+        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BtnSearch_Click(sender, e);
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void TxtSearch_Enter(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "Buscar planta")
+            {
+                textBox1.Text = "";
+                textBox1.ForeColor = Color.Black;
+            }
+        }
+
+        private void TxtSearch_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox1.Text.Trim()))
+            {
+                textBox1.Text = "Buscar planta";
+                textBox1.ForeColor = Color.Gray;
+            }
+        }
+
+        private void BtnDelete_Click(object sender, EventArgs e)
+        {
+            if (dgvPlants.CurrentRow == null)
+            {
+                MessageBox.Show("Selecciona una planta en la tabla.", "Eliminar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Plant seleccionada = (Plant)dgvPlants.CurrentRow.DataBoundItem;
+
+            DialogResult confirm = MessageBox.Show($"¿Eliminar \"{seleccionada.Nombre}\"?\nSe borrarán también sus requerimientos.",
+                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                try
+                {
+                    PlantBus.eliminar(seleccionada.IdPlanta);
+                    MessageBox.Show("Planta eliminada correctamente.", "Eliminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    CargarContenidoPlantas();
+                    CargarSelectorDePlantas();
+
+                    lblAirTemp.Text = "No data";
+                    lblAirHum.Text = "No data";
+                    lblSoilHum.Text = "No data";
+                    lblLight.Text = "No data";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

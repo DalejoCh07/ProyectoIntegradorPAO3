@@ -63,9 +63,21 @@
               "target": "Package",
               "version": "[6.6.0, )"
             },
+            "HelixToolkit.Wpf": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            },
+            "ScottPlot.WinForms": {
+              "target": "Package",
+              "version": "[4.1.74, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.9.1, )"
+            },
+            "WinForms.DataVisualization": {
+              "target": "Package",
+              "version": "[1.10.2, )"
             }
           },
           "imports": [
@@ -101,7 +113,7 @@
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             },
-            "Microsoft.WindowsDesktop.App.WindowsForms": {
+            "Microsoft.WindowsDesktop.App": {
               "privateAssets": "none"
             }
           },

@@ -64,7 +64,7 @@
             panel5 = new Panel();
             pictureBox6 = new PictureBox();
             iconButton2 = new FontAwesome.Sharp.IconButton();
-            iconButton1 = new FontAwesome.Sharp.IconButton();
+            btnNewPlant = new FontAwesome.Sharp.IconButton();
             btnDasboard = new FontAwesome.Sharp.IconButton();
             textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvPlants).BeginInit();
@@ -135,7 +135,7 @@
             label1.Size = new Size(177, 28);
             label1.TabIndex = 5;
             label1.Text = "Registered plants";
-            label1.Click += label1_Click;
+            
             // 
             // cmbPlants
             // 
@@ -158,7 +158,7 @@
             label5.Size = new Size(110, 23);
             label5.TabIndex = 2;
             label5.Text = "Soil humidity";
-            label5.Click += label5_Click;
+            
             // 
             // lblAirHum
             // 
@@ -223,7 +223,7 @@
             lblLight.Size = new Size(51, 23);
             lblLight.TabIndex = 5;
             lblLight.Text = "value";
-            lblLight.Click += label8_Click;
+            
             // 
             // label6
             // 
@@ -415,7 +415,7 @@
             panel5.Controls.Add(pictureBox6);
             panel5.Controls.Add(label1);
             panel5.Controls.Add(iconButton2);
-            panel5.Controls.Add(iconButton1);
+            panel5.Controls.Add(btnNewPlant);
             panel5.Controls.Add(btnDasboard);
             panel5.Controls.Add(textBox1);
             panel5.Controls.Add(dgvPlants);
@@ -457,28 +457,29 @@
             iconButton2.TextImageRelation = TextImageRelation.ImageBeforeText;
             iconButton2.UseVisualStyleBackColor = false;
             // 
-            // iconButton1
+            // btnNewPlant
             // 
-            iconButton1.BackColor = Color.FromArgb(84, 86, 240);
-            iconButton1.FlatAppearance.BorderSize = 0;
-            iconButton1.FlatStyle = FlatStyle.Flat;
-            iconButton1.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            iconButton1.ForeColor = Color.WhiteSmoke;
-            iconButton1.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
-            iconButton1.IconColor = Color.WhiteSmoke;
-            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton1.IconSize = 25;
-            iconButton1.ImageAlign = ContentAlignment.MiddleLeft;
-            iconButton1.Location = new Point(621, 116);
-            iconButton1.Margin = new Padding(3, 4, 3, 4);
-            iconButton1.Name = "iconButton1";
-            iconButton1.Padding = new Padding(11, 0, 0, 0);
-            iconButton1.Size = new Size(148, 37);
-            iconButton1.TabIndex = 11;
-            iconButton1.Text = "New plant";
-            iconButton1.TextAlign = ContentAlignment.MiddleLeft;
-            iconButton1.TextImageRelation = TextImageRelation.ImageBeforeText;
-            iconButton1.UseVisualStyleBackColor = false;
+            btnNewPlant.BackColor = Color.FromArgb(84, 86, 240);
+            btnNewPlant.FlatAppearance.BorderSize = 0;
+            btnNewPlant.FlatStyle = FlatStyle.Flat;
+            btnNewPlant.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnNewPlant.ForeColor = Color.WhiteSmoke;
+            btnNewPlant.IconChar = FontAwesome.Sharp.IconChar.PlusSquare;
+            btnNewPlant.IconColor = Color.WhiteSmoke;
+            btnNewPlant.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnNewPlant.IconSize = 25;
+            btnNewPlant.ImageAlign = ContentAlignment.MiddleLeft;
+            btnNewPlant.Location = new Point(621, 116);
+            btnNewPlant.Margin = new Padding(3, 4, 3, 4);
+            btnNewPlant.Name = "btnNewPlant";
+            btnNewPlant.Padding = new Padding(11, 0, 0, 0);
+            btnNewPlant.Size = new Size(148, 37);
+            btnNewPlant.TabIndex = 11;
+            btnNewPlant.Text = "New plant";
+            btnNewPlant.TextAlign = ContentAlignment.MiddleLeft;
+            btnNewPlant.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnNewPlant.UseVisualStyleBackColor = false;
+            btnNewPlant.Click += btnNewPlant_Click;
             // 
             // btnDasboard
             // 
@@ -578,7 +579,7 @@
         private Label label13;
         private Panel panel5;
         private TextBox textBox1;
-        private FontAwesome.Sharp.IconButton iconButton1;
+        private FontAwesome.Sharp.IconButton btnNewPlant;
         private FontAwesome.Sharp.IconButton btnDasboard;
         private FontAwesome.Sharp.IconButton iconButton2;
         private PictureBox pictureBox6;

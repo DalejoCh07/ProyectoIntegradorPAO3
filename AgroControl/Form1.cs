@@ -1,7 +1,8 @@
-using System;
-using System.Windows.Forms;
-using Entities;
 using BusinessLogic;
+using Entities;
+using System;
+using System.Data;
+using System.Windows.Forms;
 
 namespace AgroControl
 {
@@ -42,9 +43,10 @@ namespace AgroControl
                 MessageBox.Show($"Bienvenido al sistema agroControl, {usuarioActual.Nombre}.\nRol: {usuarioActual.TipoUsuario}", "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // --- CÓDIGO PARA ABRIR LA INTERFAZ PRINCIPAL ---
-
+                int idInvernaderoSeleccionado = Convert.ToInt32(cmbGreenhouse.SelectedValue);
+                string nombreInvernaderoSeleccionado = cmbGreenhouse.Text;
                 // 1. Creamos una "instancia" (una copia en memoria) de tu ventana principal
-                Interfaz ventanaPrincipal = new Interfaz(usuarioActual);
+                Interfaz ventanaPrincipal = new Interfaz(usuarioActual, idInvernaderoSeleccionado, nombreInvernaderoSeleccionado);
 
                 // Opcional pero recomendado: Si quieres que cuando cierren la ventana principal 
                 // se cierre todo el programa por completo, agrega esta línea:
@@ -69,7 +71,14 @@ namespace AgroControl
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // 1. Cargar el ComboBox al abrir el login
+            // Asegúrate de que los nombres de tabla y columnas coincidan con tu base de datos SQL
+            string sql = "SELECT idInvernadero, nombre FROM INVERNADERO";
+            DataTable dt = DataAccess.DataAccess.getQuery(sql);
 
+            cmbGreenhouse.DataSource = dt;
+            cmbGreenhouse.DisplayMember = "nombre";      // Lo que ve el usuario
+            cmbGreenhouse.ValueMember = "idInvernadero"; // El ID oculto que usaremos en código
         }
 
         private void label3_Click(object sender, EventArgs e)
