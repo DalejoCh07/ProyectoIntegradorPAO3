@@ -81,5 +81,29 @@ namespace BusinessLogic // O el namespace de tu capa de negocio
             List<SqlParameter> parametros = new List<SqlParameter> { new SqlParameter("@idInv", idInvernadero) };
             return DataAccess.DataAccess.getQuery(sql, parametros);
         }
+
+        public static DataTable getEstadisticas(DateTime desde, DateTime hasta, int idInvernadero)
+        {
+            string sql = @"
+                SELECT 
+                    S.tipo AS Sensor,
+                    COUNT(L.valor) AS Muestras,
+                    CAST(ROUND(MIN(L.valor), 1) AS DECIMAL(10,1)) AS Minimo,
+                    CAST(ROUND(AVG(L.valor), 1) AS DECIMAL(10,1)) AS Promedio,
+                    CAST(ROUND(MAX(L.valor), 1) AS DECIMAL(10,1)) AS Maximo
+                FROM LECTURA L
+                INNER JOIN SENSORES S ON L.idSensor = S.idSensor
+                WHERE S.idInvernadero = @idInv AND L.fechaHora BETWEEN @desde AND @hasta
+                GROUP BY S.tipo
+                ORDER BY S.tipo";
+
+            List<SqlParameter> parametros = new List<SqlParameter>
+            {
+                new SqlParameter("@idInv", idInvernadero),
+                new SqlParameter("@desde", desde),
+                new SqlParameter("@hasta", hasta)
+            };
+            return DataAccess.DataAccess.getQuery(sql, parametros);
+        }
     }
 }

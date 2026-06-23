@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AgroControl")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e87f536ef48ffb5960a316616c3de359d0c8268c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f926d386c7f01b52c9b0042392dce29abcd8266d")]
 [assembly: System.Reflection.AssemblyProductAttribute("AgroControl")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AgroControl")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

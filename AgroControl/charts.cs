@@ -17,6 +17,7 @@ namespace AgroControl
         public charts(int idInvernadero)
         {
             InitializeComponent();
+            this.MouseWheel += BloquearScrollFormulario;
             ConfigurarEstiloGraficos();
             this.idInvernaderoActual = idInvernadero;
             panel3D.Paint += Panel3D_Paint;
@@ -27,7 +28,30 @@ namespace AgroControl
             refreshTimer.Tick += (s, e) => panel3D.Invalidate();
             refreshTimer.Start();
         }
+        private void charts_Load(object sender, EventArgs e)
+        {
+            // Usamos 'this' en lugar de 'charts' para referirnos a este formulario específico.
+            this.MouseWheel += BloquearScrollFormulario;
+        }
 
+        private void BloquearScrollFormulario(object sender, MouseEventArgs e)
+        {
+            // Al convertir el evento y marcarlo como "Handled" (Manejado),
+            // le decimos a Windows que ignore la acción de mover la barra de scroll.
+            if (e is HandledMouseEventArgs he)
+            {
+                he.Handled = true;
+            }
+        }
+
+        private void Panel1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // Convierte el argumento a HandledMouseEventArgs y bloquea el scroll
+            if (e is HandledMouseEventArgs he)
+            {
+                he.Handled = true;
+            }
+        }
         private void ConfigurarEstiloGraficos()
         {
             var graficos = new[] { formsPlot1, formsPlot5, formsPlot6, formsPlot3, formsPlot4 };
