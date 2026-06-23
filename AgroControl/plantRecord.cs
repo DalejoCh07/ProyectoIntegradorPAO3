@@ -15,9 +15,12 @@ namespace AgroControl
 {
     public partial class plantRecord : Form
     {
-        public plantRecord()
+        private Usuario _usuarioActual;
+
+        public plantRecord(Usuario usuario)
         {
             InitializeComponent();
+            _usuarioActual = usuario;
             CargarContenidoPlantas();
             CargarSelectorDePlantas();
             btnDasboard.Click += BtnSearch_Click;
@@ -127,6 +130,11 @@ namespace AgroControl
 
         private void btnNewPlant_Click(object sender, EventArgs e)
         {
+            if (_usuarioActual.TipoUsuario != "Admin" && _usuarioActual.TipoUsuario != "Tecnico")
+            {
+                MessageBox.Show("No tienes los permisos necesarios para agregar plantas.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             using (newPlant ventanaConfig = new newPlant())
             {
                 if (ventanaConfig.ShowDialog() == DialogResult.OK)
@@ -206,6 +214,11 @@ namespace AgroControl
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
+            if (_usuarioActual.TipoUsuario != "Admin" && _usuarioActual.TipoUsuario != "Tecnico")
+            {
+                MessageBox.Show("No tienes los permisos necesarios para eliminar plantas.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             if (dgvPlants.CurrentRow == null)
             {
                 MessageBox.Show("Selecciona una planta en la tabla.", "Eliminar", MessageBoxButtons.OK, MessageBoxIcon.Warning);

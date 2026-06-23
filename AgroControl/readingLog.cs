@@ -20,8 +20,29 @@ namespace AgroControl
         {
             InitializeComponent();
             _idInvernadero = idInvernadero;
+            ConfigurarDatePickers();
             CargarHistorialLecturas();
             CargarRegistroAcciones();
+        }
+
+        private void ConfigurarDatePickers()
+        {
+            // SOLUCIÓN A LA TRANSPARENCIA: 
+            // Forzamos colores sólidos (blanco por defecto) para evitar el error visual (glitch) de WinForms.
+            dateTimePicker1.BackColor = Color.White;
+            dateTimePicker1.ForeColor = Color.Black;
+
+            dateTimePicker2.BackColor = Color.White;
+            dateTimePicker2.ForeColor = Color.Black;
+
+            // SOLUCIÓN AL FORMATO DE FECHA:
+            // Le decimos al control que use un formato "Custom" (Personalizado)
+            dateTimePicker1.Format = DateTimePickerFormat.Custom;
+            // Definimos el patrón exacto: dd (día 2 dígitos), MM (mes 2 dígitos), yyyy (año 4 dígitos)
+            dateTimePicker1.CustomFormat = "dd/MM/yyyy";
+
+            dateTimePicker2.Format = DateTimePickerFormat.Custom;
+            dateTimePicker2.CustomFormat = "dd/MM/yyyy";
         }
 
         private void BtnFiltrar_Click(object sender, EventArgs e)

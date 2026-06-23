@@ -74,6 +74,11 @@ namespace AgroControl
 
         private void iconButton1_Click(object sender, EventArgs e)
         {
+            if (_usuarioLogueado.TipoUsuario != "Admin" && _usuarioLogueado.TipoUsuario != "Tecnico")
+            {
+                MessageBox.Show("No tienes los permisos necesarios para acceder a esta sección.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             label1.Text = "Technical functions";
             openSonForm(new technical());
         }
@@ -104,7 +109,7 @@ namespace AgroControl
         private void btnPlantRecords_Click(object sender, EventArgs e)
         {
             label1.Text = "Plant Records";
-            openSonForm(new plantRecord());
+            openSonForm(new plantRecord(_usuarioLogueado));
         }
 
         private void btnUser_Click(object sender, EventArgs e)

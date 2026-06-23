@@ -37,6 +37,11 @@ namespace AgroControl
         // Evento para el botón Manage users
         private void btnManage_Click(object sender, EventArgs e)
         {
+            if (_usuarioActual.TipoUsuario != "Admin")
+            {
+                MessageBox.Show("No tienes los permisos necesarios para administrar usuarios.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             // 1. Abrimos el formulario de administración
             adminUsers admin = new adminUsers();
 

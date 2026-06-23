@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\daalc\\source\\repos\\AgroControl\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|C:\\Users\\daalc\\source\\repos\\AgroControl\\agrocontrol\\readinglog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|c:\\users\\daalc\\source\\repos\\agrocontrol\\agrocontrol\\readinglog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|solutionrelative:agrocontrol\\readinglog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|c:\\users\\daalc\\source\\repos\\agrocontrol\\agrocontrol\\readinglog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|solutionrelative:agrocontrol\\readinglog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|C:\\Users\\daalc\\source\\repos\\AgroControl\\agrocontrol\\filterreadings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|solutionrelative:agrocontrol\\filterreadings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|c:\\users\\daalc\\source\\repos\\agrocontrol\\agrocontrol\\readinglog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|solutionrelative:agrocontrol\\readinglog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|c:\\users\\daalc\\source\\repos\\agrocontrol\\agrocontrol\\filterreadings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,7 +27,7 @@
       "RelativeMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|solutionrelative:agrocontrol\\charts.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|c:\\users\\daalc\\source\\repos\\agrocontrol\\agrocontrol\\newbatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|C:\\Users\\daalc\\source\\repos\\AgroControl\\agrocontrol\\newbatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{51287DF1-BD0F-1FB1-1ECE-8C8C540F5659}|AgroControl\\AgroControl.csproj|solutionrelative:agrocontrol\\newbatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
@@ -58,7 +58,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
@@ -70,8 +70,7 @@
               "RelativeToolTip": "AgroControl\\charts.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-22T19:45:28.463Z",
-              "IsPinned": true,
-              "EditorCaption": " [Design]"
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -83,8 +82,7 @@
               "RelativeToolTip": "BusinessLogic\\readingBus.cs",
               "ViewState": "AgIAAE8AAAAAAAAAAAAkwGEAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-23T04:44:02.832Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-23T04:44:02.832Z"
             },
             {
               "$type": "Document",
@@ -101,7 +99,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "filterReadings.cs [Design]",
               "DocumentMoniker": "C:\\Users\\daalc\\source\\repos\\AgroControl\\AgroControl\\filterReadings.cs",
               "RelativeDocumentMoniker": "AgroControl\\filterReadings.cs",
@@ -113,20 +111,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "readingLog.cs",
               "DocumentMoniker": "C:\\Users\\daalc\\source\\repos\\AgroControl\\AgroControl\\readingLog.cs",
               "RelativeDocumentMoniker": "AgroControl\\readingLog.cs",
               "ToolTip": "C:\\Users\\daalc\\source\\repos\\AgroControl\\AgroControl\\readingLog.cs",
               "RelativeToolTip": "AgroControl\\readingLog.cs",
-              "ViewState": "AgIAAHsAAAAAAAAAAAAEwIUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAiwBYAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-23T02:29:56.215Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "readingLog.cs [Design]",
               "DocumentMoniker": "C:\\Users\\daalc\\source\\repos\\AgroControl\\AgroControl\\readingLog.cs",
               "RelativeDocumentMoniker": "AgroControl\\readingLog.cs",
@@ -145,8 +143,7 @@
               "ToolTip": "C:\\Users\\daalc\\source\\repos\\AgroControl\\AgroControl\\newBatch.cs [Design]",
               "RelativeToolTip": "AgroControl\\newBatch.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-22T18:17:39.915Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2026-06-22T18:17:39.915Z"
             },
             {
               "$type": "Document",
@@ -192,8 +189,7 @@
               "RelativeToolTip": "AgroControl\\charts.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAAwCEAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-22T21:33:30.569Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-22T21:33:30.569Z"
             },
             {
               "$type": "Document",
