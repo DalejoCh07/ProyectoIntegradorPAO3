@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
+using System;
 using System.Windows.Forms;
 
 namespace AgroControl
 {
     public partial class newPlant : Form
     {
+        private readonly IPlantController _plantController = new PlantController();
+
         public newPlant()
         {
             InitializeComponent();
@@ -21,7 +24,7 @@ namespace AgroControl
 
             if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(nombreCien))
             {
-                MessageBox.Show("Debes ingresar el nombre y el nombre científico de la planta.", "Campos incompletos",
+                MessageBox.Show("You must enter the name and scientific name of the plant.", "Incomplete Fields",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -35,14 +38,14 @@ namespace AgroControl
                 !decimal.TryParse(textBox9.Text.Trim(), out decimal lMin) ||
                 !decimal.TryParse(textBox20.Text.Trim(), out decimal lMax))
             {
-                MessageBox.Show("Todos los campos de requerimientos deben ser valores numéricos.", "Campos incompletos",
+                MessageBox.Show("All requirement fields must be numeric values.", "Incomplete Fields",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (hsMin >= hsMax || taMin >= taMax || haMin >= haMax || lMin >= lMax)
             {
-                MessageBox.Show("El valor mínimo debe ser menor que el máximo en cada rango.", "Rangos inválidos",
+                MessageBox.Show("The minimum value must be less than the maximum in each range.", "Invalid Ranges",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -51,44 +54,12 @@ namespace AgroControl
             {
                 string desc = string.IsNullOrEmpty(descripcion) ? null : descripcion;
 
-                string sql = @"
-BEGIN TRY
-    BEGIN TRANSACTION
-        DECLARE @newId INT;
-        INSERT INTO PLANTA (nombre, nombreCien, descripcion) VALUES (@nombre, @nombreCien, @desc);
-        SET @newId = SCOPE_IDENTITY();
-        INSERT INTO REQUERIMIENTOS (tempAireMin, tempAireMax, humAireMin, humAireMax, humSueloMin, humSueloMax, luzMin, luzMax, idPlanta)
-        VALUES (@taMin, @taMax, @haMin, @haMax, @hsMin, @hsMax, @lMin, @lMax, @newId);
-    COMMIT TRANSACTION
-END TRY
-BEGIN CATCH
-    ROLLBACK TRANSACTION;
-    THROW;
-END CATCH";
+                Plant planta = new Plant { Nombre = nombre, NombreCien = nombreCien, Descripcion = desc };
+                Requirements req = new Requirements { TempAireMin = taMin, TempAireMax = taMax, HumAireMin = haMin, HumAireMax = haMax, HumSueloMin = hsMin, HumSueloMax = hsMax, LuzMin = lMin, LuzMax = lMax };
 
-                List<SqlParameter> parametros = new List<SqlParameter>();
-                parametros.Add(new SqlParameter("@nombre", nombre));
-                parametros.Add(new SqlParameter("@nombreCien", nombreCien));
-                parametros.Add(new SqlParameter("@desc", string.IsNullOrEmpty(descripcion) ? (object)DBNull.Value : descripcion));
-                parametros.Add(new SqlParameter("@taMin", taMin));
-                parametros.Add(new SqlParameter("@taMax", taMax));
-                parametros.Add(new SqlParameter("@haMin", haMin));
-                parametros.Add(new SqlParameter("@haMax", haMax));
-                parametros.Add(new SqlParameter("@hsMin", hsMin));
-                parametros.Add(new SqlParameter("@hsMax", hsMax));
-                parametros.Add(new SqlParameter("@lMin", lMin));
-                parametros.Add(new SqlParameter("@lMax", lMax));
+                _plantController.GuardarConRequerimientos(planta, req);
 
-                int filas = DataAccess.DataAccess.execQuery(sql, parametros);
-
-                if (filas <= 0)
-                {
-                    MessageBox.Show("No se pudo registrar la planta.", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                MessageBox.Show("Planta y requerimientos registrados correctamente.", "Éxito",
+                MessageBox.Show("Plant and requirements registered successfully.", "Ã‰xito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 DialogResult = DialogResult.OK;
@@ -102,3 +73,5 @@ END CATCH";
         }
     }
 }
+
+

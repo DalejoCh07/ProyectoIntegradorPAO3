@@ -2,15 +2,8 @@
 {
     partial class filterReadings
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             panel1 = new Panel();
@@ -533,7 +522,7 @@
             ClientSize = new Size(958, 465);
             Controls.Add(panel1);
             Name = "filterReadings";
-            Text = "Filter readings";
+            Text = "Filter Readings";
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -592,3 +581,5 @@
         private PictureBox pictureBox1;
     }
 }
+
+

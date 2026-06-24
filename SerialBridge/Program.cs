@@ -21,26 +21,7 @@ int cicloSimulacion = 0;
 SerialPort? port = null;
 if (!modoSimulacion)
 {
-    try
-    {
-        port = new SerialPort(comPort, baudRate) { ReadTimeout = 3000, DtrEnable = true, RtsEnable = true };
-        port.Open();
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"Conectado a {comPort} a {baudRate} baud.");
-        Console.ResetColor();
-        Console.WriteLine("Modo: Arduino REAL. Enviando datos a SQL Server...\n");
-    }
-    catch (Exception ex)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"ERROR: No se pudo conectar al Arduino en {comPort}.");
-        Console.WriteLine($"Detalle: {ex.Message}");
-        Console.ResetColor();
-        Console.WriteLine("Conecta el Arduino y ejecuta de nuevo, o usa --simulate para simular.\n");
-        Console.WriteLine("Presiona cualquier tecla para salir...");
-        Console.ReadKey();
-        return;
-    }
+    ConectarSerial(ref port, comPort, baudRate);
 }
 
 if (modoSimulacion)
@@ -63,8 +44,18 @@ while (true)
         int humSuelo = 0, luz = 0, bomba = 0, vent = 0, humi = 0, lampara = 0;
         bool hayDatos = false;
 
-        if (!modoSimulacion && port != null && port.IsOpen)
+        if (!modoSimulacion)
         {
+            if (port == null || !port.IsOpen)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Reconectando serial en 5 seg...");
+                Console.ResetColor();
+                Thread.Sleep(5000);
+                ConectarSerial(ref port, comPort, baudRate);
+                continue;
+            }
+
             // === MODO REAL: Leer desde Arduino ===
             string? line = port.ReadLine()?.Trim();
             if (string.IsNullOrEmpty(line)) { Thread.Sleep(100); continue; }
@@ -159,12 +150,60 @@ while (true)
     catch (InvalidOperationException)
     {
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("\nERROR: Arduino desconectado. No se insertarán más datos.");
-        Console.WriteLine("Conecta el Arduino y ejecuta de nuevo.");
+        Console.WriteLine($"\n[{DateTime.Now:HH:mm:ss}] ERROR: Arduino desconectado. Reintentando en 5 seg...");
         Console.ResetColor();
-        break;
+        try { port?.Close(); port?.Dispose(); } catch { }
+        port = null;
     }
     catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); Thread.Sleep(1000); }
+}
+
+static void ConectarSerial(ref SerialPort? port, string comPort, int baudRate)
+{
+    if (port != null)
+    {
+        try { port.Close(); } catch { }
+        try { port.Dispose(); } catch { }
+        port = null;
+    }
+
+    try
+    {
+        port = new SerialPort(comPort, baudRate) { ReadTimeout = 3000, DtrEnable = true, RtsEnable = true };
+        port.Open();
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] Conectado a {comPort} a {baudRate} baud.");
+        Console.ResetColor();
+    }
+    catch
+    {
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.Write($"[{DateTime.Now:HH:mm:ss}] {comPort} no disponible, escaneando puertos... ");
+        string[] ports = SerialPort.GetPortNames();
+        Console.ResetColor();
+        bool conectado = false;
+        foreach (string p in ports)
+        {
+            if (string.Equals(p, comPort, StringComparison.OrdinalIgnoreCase)) continue;
+            try
+            {
+                port = new SerialPort(p, baudRate) { ReadTimeout = 3000, DtrEnable = true, RtsEnable = true };
+                port.Open();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Conectado a {p}!");
+                Console.ResetColor();
+                conectado = true;
+                break;
+            }
+            catch { port = null; }
+        }
+        if (!conectado)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Ningun puerto disponible.");
+            Console.ResetColor();
+        }
+    }
 }
 
 static void InsertLectura(SqlConnection conn, decimal valor, DateTime fecha, int idSensor)

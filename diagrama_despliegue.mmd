@@ -1,0 +1,57 @@
+---
+title: AgroControl - Diagrama de Despliegue
+---
+flowchart LR
+
+    %% ============================================================
+    %% NODO: ARDUINO (dispositivo físico)
+    %% ============================================================
+    subgraph Arduino_Node ["<<device>> Arduino Uno/Nano"]
+        direction TB
+        Firmware["<<artifact>> Firmware.ino"]
+        Sensores["Sensores:\nDHT22 (temp/humedad)\nYL-69 (hum suelo)\nLDR (luz)"]
+    end
+
+    %% ============================================================
+    %% NODO: PC USUARIO
+    %% ============================================================
+    subgraph PC_Node ["<<device>> PC Usuario (Windows 10/11)"]
+        direction TB
+
+        subgraph WinForms_App ["<<executionEnvironment>> .NET 8.0 Runtime"]
+            EXE["<<artifact>> AgroControl.exe"]
+            DI_CTRL["<<artifact>> AgroControl.Controller.dll"]
+            DI_MODEL["<<artifact>> AgroControl.Model.dll"]
+            ScottPlot["<<library>> ScottPlot 4.1.71"]
+            FA["<<library>> FontAwesome.Sharp 6.3.0"]
+            SP["<<library>> System.IO.Ports 8.0.0"]
+        end
+
+        subgraph OS ["<<executionEnvironment>> Sistema Operativo"]
+            USB_Port["<<interface>> Puerto USB (COMx)"]
+        end
+
+        subgraph SQL_Client ["Cliente SQL"]
+            SQL_Conn["<<library>> System.Data.SqlClient"]
+        end
+    end
+
+    %% ============================================================
+    %% NODO: SERVIDOR BD
+    %% ============================================================
+    subgraph DB_Server ["<<device>> Servidor BD (localhost)"]
+        direction TB
+        SQL_Instance["<<executionEnvironment>> SQL Server 2019+"]
+        Agro_DB["<<database>> agroControl"]
+        Tables["Tablas:\nUSUARIOS, INVERNADERO,\nPLANTA, REQUERIMIENTOS,\nSENSORES, ACTUADOR,\nLECTURA, LOTES, ACCION"]
+    end
+
+    %% ============================================================
+    %% CONEXIONES
+    %% ============================================================
+    Arduino_Node -- "USB 2.0 (9600 baud, CSV)" --> PC_Node
+    WinForms_App --> SQL_Client
+    SQL_Client -- "TCP/IP (1433)" --> DB_Server
+    USB_Port o--o EXE
+    DI_CTRL o--o EXE
+    DI_MODEL o--o DI_CTRL

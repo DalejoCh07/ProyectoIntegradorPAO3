@@ -1,5 +1,6 @@
-﻿using BusinessLogic;
-using Entities;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
 using System;
 using System.Windows.Forms;
 
@@ -7,6 +8,8 @@ namespace AgroControl
 {
     public partial class newGreenhouse : Form
     {
+        private readonly IGreenhouseController _greenhouseController = new GreenhouseController();
+
         public newGreenhouse()
         {
             InitializeComponent();
@@ -22,19 +25,19 @@ namespace AgroControl
 
             if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(direccion))
             {
-                MessageBox.Show("Debes ingresar el nombre y la dirección.", "Campos incompletos",
+                MessageBox.Show("You must enter the name and address.", "Incomplete Fields",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
-                Greenhouse gh = new Greenhouse(0, nombre, direccion, descripcion);
-                int id = GreenhouseBus.insertar(gh);
+                Greenhouse gh = new Greenhouse { Nombre = nombre, Ubicacion = direccion, Descripcion = descripcion };
+                int id = _greenhouseController.Agregar(gh);
 
                 if (id > 0)
                 {
-                    MessageBox.Show("Invernadero registrado correctamente.", "Éxito",
+                    MessageBox.Show("Greenhouse registered successfully.", "Ã‰xito",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                     Close();
@@ -48,3 +51,5 @@ namespace AgroControl
         }
     }
 }
+
+

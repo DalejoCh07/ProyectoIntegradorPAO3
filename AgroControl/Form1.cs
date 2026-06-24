@@ -1,5 +1,6 @@
-using BusinessLogic;
-using Entities;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -8,26 +9,25 @@ namespace AgroControl
 {
     public partial class Form1 : Form
     {
+        private readonly IUsuarioController _usuarioController = new UsuarioController();
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        // Dentro del evento Click del botón "Ingresar" en tu Formulario
         public void ingresar(string txtUsuario, string txtContrasena)
         {
             string nombreIngresado = txtUsuario.Trim();
             string claveIngresada = txtContrasena.Trim();
 
-            // Verificamos que no envíen campos vacíos
             if (string.IsNullOrEmpty(nombreIngresado) || string.IsNullOrEmpty(claveIngresada))
             {
-                MessageBox.Show("Por favor, ingrese usuario y contraseña.", "Advertencia");
+                MessageBox.Show("Please enter username and password.", "Warning");
                 return;
             }
 
-            // Llamamos a la capa de negocio
-            Usuario usuarioActual = BusinessLogic.UsuarioBus.ValidarLogin(nombreIngresado, claveIngresada);
+            Usuario usuarioActual = _usuarioController.Login(nombreIngresado, claveIngresada);
 
             if (usuarioActual != null)
             {
@@ -35,32 +35,25 @@ namespace AgroControl
             }
             else
             {
-                MessageBox.Show("Nombre de usuario o contraseña incorrectos.", "Error de Acceso");
+                MessageBox.Show("Invalid username or password.", "Access Error");
             }
-            // 3. Evaluamos la respuesta de la Capa de Negocio
             if (usuarioActual != null)
             {
-                MessageBox.Show($"Bienvenido al sistema agroControl, {usuarioActual.Nombre}.\nRol: {usuarioActual.TipoUsuario}", "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Welcome to AgroControl, {usuarioActual.Nombre}.\nRole: {usuarioActual.TipoUsuario}", "Access Granted", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // --- CÓDIGO PARA ABRIR LA INTERFAZ PRINCIPAL ---
                 int idInvernaderoSeleccionado = Convert.ToInt32(cmbGreenhouse.SelectedValue);
                 string nombreInvernaderoSeleccionado = cmbGreenhouse.Text;
-                // 1. Creamos una "instancia" (una copia en memoria) de tu ventana principal
                 Interfaz ventanaPrincipal = new Interfaz(usuarioActual, idInvernaderoSeleccionado, nombreInvernaderoSeleccionado);
 
-                // Opcional pero recomendado: Si quieres que cuando cierren la ventana principal 
-                // se cierre todo el programa por completo, agrega esta línea:
                 ventanaPrincipal.FormClosed += (s, args) => this.Close();
 
-                // 2. Mostramos la nueva ventana al usuario
                 ventanaPrincipal.Show();
 
-                // 3. Ocultamos la ventana actual de Login para que no estorbe
                 this.Hide();
             }
             else
             {
-                MessageBox.Show("Nombre de usuario o contraseña incorrectos.", "Error de Acceso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Invalid username or password.", "Access Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void button1_Click(object sender, EventArgs e)
@@ -71,14 +64,12 @@ namespace AgroControl
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // 1. Cargar el ComboBox al abrir el login
-            // Asegúrate de que los nombres de tabla y columnas coincidan con tu base de datos SQL
             string sql = "SELECT idInvernadero, nombre FROM INVERNADERO";
-            DataTable dt = DataAccess.DataAccess.getQuery(sql);
+            DataTable dt = AgroControl.Model.DataAccess.GetQuery(sql);
 
             cmbGreenhouse.DataSource = dt;
-            cmbGreenhouse.DisplayMember = "nombre";      // Lo que ve el usuario
-            cmbGreenhouse.ValueMember = "idInvernadero"; // El ID oculto que usaremos en código
+            cmbGreenhouse.DisplayMember = "nombre";
+            cmbGreenhouse.ValueMember = "idInvernadero";
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -87,3 +78,5 @@ namespace AgroControl
         }
     }
 }
+
+

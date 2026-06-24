@@ -1,5 +1,6 @@
-﻿using BusinessLogic;
-using Entities;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -9,6 +10,9 @@ namespace AgroControl
   
     public partial class newSensor : Form
     {
+        private readonly IGreenhouseController _greenhouseController = new GreenhouseController();
+        private readonly ISensorController _sensorController = new SensorController();
+
         public newSensor()
         {
             InitializeComponent();
@@ -19,7 +23,6 @@ namespace AgroControl
 
         private void CargarTiposDeSensores()
         {
-            // Lista directa con los valores exactos que exige tu regla en SQL Server
             List<string> tiposSQL = new List<string>
             {
                 "humSuelo",
@@ -29,20 +32,20 @@ namespace AgroControl
             };
 
             cmbSensorTypes.DataSource = tiposSQL;
-            cmbSensorTypes.SelectedIndex = -1; // Para que inicie vacío
+            cmbSensorTypes.SelectedIndex = -1;
         }
 
         private void CargarGreenhouses()
         {
             try
             {
-                List<Greenhouse> lista = GreenhouseBus.getGreenhouses();
+                List<Greenhouse> lista = _greenhouseController.Listar();
                 cmbGreenhouse.DataSource = null;
                 cmbGreenhouse.DataSource = lista;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar invernaderos: " + ex.Message);
+                MessageBox.Show("Error loading greenhouses: " + ex.Message);
             }
         }
 
@@ -50,7 +53,7 @@ namespace AgroControl
         {
             if (cmbSensorTypes.SelectedItem == null || cmbGreenhouse.SelectedItem == null)
             {
-                MessageBox.Show("Selecciona el tipo y el invernadero.", "Campos incompletos",
+                MessageBox.Show("Select the type and the greenhouse.", "Incomplete Fields",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -60,12 +63,12 @@ namespace AgroControl
                 string tipo = cmbSensorTypes.SelectedItem.ToString();
                 int idInv = ((Greenhouse)cmbGreenhouse.SelectedItem).IdInvernadero;
 
-                Sensor sensor = new Sensor(0, tipo, idInv);
-                int id = SensorBus.insertar(sensor);
+                Sensor sensor = new Sensor { Tipo = tipo, IdInvernadero = idInv };
+                int id = _sensorController.Agregar(sensor);
 
                 if (id > 0)
                 {
-                    MessageBox.Show("Sensor registrado correctamente.", "Éxito",
+                    MessageBox.Show("Sensor registered successfully.", "Ã‰xito",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                     Close();
@@ -79,3 +82,5 @@ namespace AgroControl
         }
     }
 }
+
+

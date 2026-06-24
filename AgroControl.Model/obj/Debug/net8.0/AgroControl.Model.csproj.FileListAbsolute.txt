@@ -1,0 +1,13 @@
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.csproj.AssemblyReference.cache
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.AssemblyInfoInputs.cache
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.AssemblyInfo.cs
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.csproj.CoreCompileInputs.cache
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.sourcelink.json
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\bin\Debug\net8.0\AgroControl.Model.deps.json
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\bin\Debug\net8.0\AgroControl.Model.dll
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\bin\Debug\net8.0\AgroControl.Model.pdb
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.dll
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\refint\AgroControl.Model.dll
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\AgroControl.Model.pdb
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Model\obj\Debug\net8.0\ref\AgroControl.Model.dll

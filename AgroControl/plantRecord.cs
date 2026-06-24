@@ -1,5 +1,6 @@
-﻿using BusinessLogic;
-using Entities;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,8 @@ namespace AgroControl
 {
     public partial class plantRecord : Form
     {
+        private readonly IPlantController _plantController = new PlantController();
+        private readonly IRequirementsController _requirementsController = new RequirementsController();
         private Usuario _usuarioActual;
 
         public plantRecord(Usuario usuario)
@@ -33,18 +36,14 @@ namespace AgroControl
         {
             try
             {
-                List<Plant> lista = PlantBus.getPlantas();
+                List<Plant> lista = _plantController.Listar();
                 dgvPlants.DataSource = lista;
 
-                // --- CÓDIGO PARA OCULTAR LA COLUMNA ID ---
-                // Verificamos que la columna exista para evitar errores
                 if (dgvPlants.Columns.Contains("IdPlanta"))
                 {
-                    // Apagamos la visibilidad de la columna
                     dgvPlants.Columns["IdPlanta"].Visible = false;
                 }
 
-                // (Aquí también iría el código que te di antes para alargar la columna Descripción)
                 if (dgvPlants.Columns.Contains("Descripcion"))
                 {
                     dgvPlants.Columns["Descripcion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -54,7 +53,7 @@ namespace AgroControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar el catálogo de plantas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading plant catalog: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -62,52 +61,38 @@ namespace AgroControl
         {
             try
             {
-                // Reutilizamos el método que ya tienes en FPlanta
-                List<Plant> listaPlantas = PlantBus.getPlantas();
+                List<Plant> listaPlantas = _plantController.Listar();
 
-                // Limpiamos y asignamos los datos al ComboBox
                 cmbPlants.DataSource = null;
                 cmbPlants.DataSource = listaPlantas;
 
-                // ¡Importante! Como en la clase Planta hiciste el "override string ToString()", 
-                // el ComboBox mostrará el nombre automáticamente.
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar las plantas: " + ex.Message);
+                MessageBox.Show("Error loading plants: " + ex.Message);
             }
         }
 
-        // 2. ESTE EVENTO SE DISPARA CUANDO EL USUARIO ELIGE OTRA PLANTA
         private void cmbPlants_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Verificamos que realmente haya una planta seleccionada
             if (cmbPlants.SelectedItem != null)
             {
-                // Extraemos la planta seleccionada del ComboBox
                 Plant plantaSeleccionada = (Plant)cmbPlants.SelectedItem;
 
-                // Llamamos al método que filtra la tabla pasándole el ID de la planta
                 MostrarRequerimientosPlanta(plantaSeleccionada.IdPlanta);
             }
         }
 
-        // Método para llenar el DataGridView con los datos filtrados
         private void MostrarRequerimientosPlanta(int idPlanta)
         {
             try
             {
-                // 1. Obtenemos la lista desde la capa de Negocio
-                List<Requirements> reqsFiltrados = RequirementsBus.getRequerimientosPorPlanta(idPlanta);
+                List<Requirements> reqsFiltrados = _requirementsController.ObtenerPorPlanta(idPlanta);
 
-                // 2. Verificamos si la planta tiene parámetros registrados
                 if (reqsFiltrados.Count > 0)
                 {
-                    // Tomamos el primer registro de la lista (ya que una planta tiene 1 fila de requerimientos)
                     Requirements req = reqsFiltrados[0];
 
-                    // 3. Formateamos el texto inyectando los valores y sus respectivas unidades
-                    // El ":0" quita los decimales innecesarios, y ":0.0" deja un decimal si lo prefieres
                     lblAirTemp.Text = $"{req.TempAireMin:0.0} - {req.TempAireMax:0.0}";
                     lblAirHum.Text = $"{req.HumAireMin:0} - {req.HumAireMax:0}";
                     lblSoilHum.Text = $"{req.HumSueloMin:0} - {req.HumSueloMax:0}";
@@ -115,7 +100,6 @@ namespace AgroControl
                 }
                 else
                 {
-                    // Si la planta es nueva y aún no tiene requerimientos, dejamos los campos vacíos o con un aviso
                     lblAirTemp.Text = "No data";
                     lblAirHum.Text = "No data";
                     lblSoilHum.Text = "No data";
@@ -132,7 +116,7 @@ namespace AgroControl
         {
             if (_usuarioActual.TipoUsuario != "Admin" && _usuarioActual.TipoUsuario != "Tecnico")
             {
-                MessageBox.Show("No tienes los permisos necesarios para agregar plantas.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You do not have permission to add plants.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             using (newPlant ventanaConfig = new newPlant())
@@ -163,7 +147,7 @@ namespace AgroControl
         private void BtnSearch_Click(object sender, EventArgs e)
         {
             string busqueda = textBox1.Text.Trim();
-            if (string.IsNullOrEmpty(busqueda) || busqueda == "Buscar planta")
+            if (string.IsNullOrEmpty(busqueda) || busqueda == "Search plant")
             {
                 CargarContenidoPlantas();
             }
@@ -171,7 +155,7 @@ namespace AgroControl
             {
                 try
                 {
-                    List<Plant> lista = PlantBus.buscar(busqueda);
+                    List<Plant> lista = _plantController.Buscar(busqueda);
                     dgvPlants.DataSource = lista;
                     if (dgvPlants.Columns.Contains("IdPlanta"))
                         dgvPlants.Columns["IdPlanta"].Visible = false;
@@ -196,7 +180,7 @@ namespace AgroControl
 
         private void TxtSearch_Enter(object sender, EventArgs e)
         {
-            if (textBox1.Text == "Buscar planta")
+            if (textBox1.Text == "Search plant")
             {
                 textBox1.Text = "";
                 textBox1.ForeColor = Color.Black;
@@ -207,7 +191,7 @@ namespace AgroControl
         {
             if (string.IsNullOrEmpty(textBox1.Text.Trim()))
             {
-                textBox1.Text = "Buscar planta";
+                textBox1.Text = "Search plant";
                 textBox1.ForeColor = Color.Gray;
             }
         }
@@ -216,26 +200,26 @@ namespace AgroControl
         {
             if (_usuarioActual.TipoUsuario != "Admin" && _usuarioActual.TipoUsuario != "Tecnico")
             {
-                MessageBox.Show("No tienes los permisos necesarios para eliminar plantas.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You do not have permission to delete plants.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             if (dgvPlants.CurrentRow == null)
             {
-                MessageBox.Show("Selecciona una planta en la tabla.", "Eliminar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select a plant from the table.", "Delete", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             Plant seleccionada = (Plant)dgvPlants.CurrentRow.DataBoundItem;
 
-            DialogResult confirm = MessageBox.Show($"¿Eliminar \"{seleccionada.Nombre}\"?\nSe borrarán también sus requerimientos.",
-                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = MessageBox.Show($"Delete \"{seleccionada.Nombre}\"?\nIts requirements will also be deleted.",
+                "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
                 try
                 {
-                    PlantBus.eliminar(seleccionada.IdPlanta);
-                    MessageBox.Show("Planta eliminada correctamente.", "Eliminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _plantController.Eliminar(seleccionada.IdPlanta);
+                    MessageBox.Show("Plant deleted successfully.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     CargarContenidoPlantas();
                     CargarSelectorDePlantas();
@@ -247,9 +231,13 @@ namespace AgroControl
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error deleting: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
     }
 }
+
+
+
+

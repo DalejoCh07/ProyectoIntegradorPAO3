@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "AgroControl.Controller": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\daalc\\source\\repos\\AgroControl\\AgroControl.slnx"
+    }
+  }
+}

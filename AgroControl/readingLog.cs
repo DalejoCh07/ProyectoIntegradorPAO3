@@ -1,5 +1,6 @@
-﻿using BusinessLogic;
-using Entities;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,8 @@ namespace AgroControl
 {
     public partial class readingLog : Form
     {
+        private readonly IReadingController _readingController = new ReadingController();
+        private readonly IAccionController _accionController = new AccionController();
         private int _idInvernadero;
 
         public readingLog(int idInvernadero)
@@ -27,18 +30,13 @@ namespace AgroControl
 
         private void ConfigurarDatePickers()
         {
-            // SOLUCIÓN A LA TRANSPARENCIA: 
-            // Forzamos colores sólidos (blanco por defecto) para evitar el error visual (glitch) de WinForms.
             dateTimePicker1.BackColor = Color.White;
             dateTimePicker1.ForeColor = Color.Black;
 
             dateTimePicker2.BackColor = Color.White;
             dateTimePicker2.ForeColor = Color.Black;
 
-            // SOLUCIÓN AL FORMATO DE FECHA:
-            // Le decimos al control que use un formato "Custom" (Personalizado)
             dateTimePicker1.Format = DateTimePickerFormat.Custom;
-            // Definimos el patrón exacto: dd (día 2 dígitos), MM (mes 2 dígitos), yyyy (año 4 dígitos)
             dateTimePicker1.CustomFormat = "dd/MM/yyyy";
 
             dateTimePicker2.Format = DateTimePickerFormat.Custom;
@@ -52,7 +50,7 @@ namespace AgroControl
 
             if (desde > hasta)
             {
-                MessageBox.Show("La fecha 'Desde' no puede ser mayor que 'Hasta'.", "Fechas inválidas", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("The 'From' date cannot be later than 'To'.", "Invalid Dates", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -66,34 +64,30 @@ namespace AgroControl
         {
             try
             {
-                // 1. Llamamos directamente a la capa de negocio (Cero SQL en la interfaz)
-                DataTable dtLecturas = ReadingBus.getHistorialPivot(_idInvernadero);
+                DataTable dtLecturas = _readingController.HistorialPivot(_idInvernadero);
 
-                // 2. Inyectamos los datos limpios al DataGridView
                 dgvReadings.DataSource = dtLecturas;
 
-                // 3. Aplicamos los formatos visuales específicos a cada columna
                 if (dgvReadings.Columns.Contains("Fecha y hora"))
                     dgvReadings.Columns["Fecha y hora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
 
-                if (dgvReadings.Columns.Contains("Humedad del suelo"))
-                    dgvReadings.Columns["Humedad del suelo"].DefaultCellStyle.Format = "0' %'";
+                if (dgvReadings.Columns.Contains("Soil Moisture"))
+                    dgvReadings.Columns["Soil Moisture"].DefaultCellStyle.Format = "0' %'";
 
-                if (dgvReadings.Columns.Contains("Temperatura"))
-                    dgvReadings.Columns["Temperatura"].DefaultCellStyle.Format = "0.0' °C'";
+                if (dgvReadings.Columns.Contains("Temperature"))
+                    dgvReadings.Columns["Temperature"].DefaultCellStyle.Format = "0.0' °C'";
 
-                if (dgvReadings.Columns.Contains("Humedad del aire"))
-                    dgvReadings.Columns["Humedad del aire"].DefaultCellStyle.Format = "0' %'";
+                if (dgvReadings.Columns.Contains("Air Humidity"))
+                    dgvReadings.Columns["Air Humidity"].DefaultCellStyle.Format = "0' %'";
 
-                if (dgvReadings.Columns.Contains("Intensidad de luz"))
-                    dgvReadings.Columns["Intensidad de luz"].DefaultCellStyle.Format = "0.0' lx'";
+                if (dgvReadings.Columns.Contains("Light Intensity"))
+                    dgvReadings.Columns["Light Intensity"].DefaultCellStyle.Format = "0.0' lx'";
 
-                // Truco de simetría: Mismo comportamiento de llenado elástico que el registro de acciones
                 dgvReadings.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los datos en el sistema: " + ex.Message, "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading data: " + ex.Message, "Data Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -102,41 +96,33 @@ namespace AgroControl
         {
             try
             {
-                // 1. Llamamos a la capa de negocio para obtener la lista de objetos
-                List<Accion> historial = AccionBus.getAccionesPorInvernadero(_idInvernadero);
+                List<Accion> historial = _accionController.ListarPorInvernadero(_idInvernadero);
 
-                // 2. Inyectamos la lista directamente al DataGridView
                 dgvActions.DataSource = historial;
 
-                // 3. Ajustamos la estética de las columnas generadas automáticamente
-
-                // Ocultamos los IDs internos para que el usuario final no los vea
                 if (dgvActions.Columns.Contains("IdAccion"))
                     dgvActions.Columns["IdAccion"].Visible = false;
 
                 if (dgvActions.Columns.Contains("IdActuador"))
                     dgvActions.Columns["IdActuador"].Visible = false;
 
-                // Renombramos las cabeceras para que se vean amigables
                 if (dgvActions.Columns.Contains("TipoAccion"))
-                    dgvActions.Columns["TipoAccion"].HeaderText = "Acción Realizada";
+                    dgvActions.Columns["TipoAccion"].HeaderText = "Action Performed";
 
                 if (dgvActions.Columns.Contains("Duracion"))
-                    dgvActions.Columns["Duracion"].HeaderText = "Duración";
+                    dgvActions.Columns["Duracion"].HeaderText = "Duration";
 
-                // Formateamos la fecha y renombramos la cabecera
                 if (dgvActions.Columns.Contains("FechaHora"))
                 {
                     dgvActions.Columns["FechaHora"].HeaderText = "Fecha y Hora";
                     dgvActions.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
                 }
 
-                // Hacemos que las columnas visibles se estiren para llenar el espacio
                 dgvActions.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar el registro de acciones: " + ex.Message, "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading action log: " + ex.Message, "Data Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -154,26 +140,8 @@ namespace AgroControl
         {
 
         }
-
-        /*
-        // 4. AL ELIMINAR O INSERTAR UN NUEVO SENSOR
-        private void btnIngresarSensor_Click(object sender, EventArgs e)
-        {
-            Sensor sensor = new Sensor();
-            sensor.Tipo = txtTipo.Text.Trim();
-            sensor.IdInvernadero = Convert.ToInt32(txtIdInvernadero.Text);
-
-            int rowAff = FSensor.insertar(sensor);
-
-            if (rowAff > 0)
-            {
-                MessageBox.Show("¡Sensor ingresado correctamente!");
-
-                // ¡Aquí también llamamos al método! 
-                // Así la tabla se actualiza sola y muestra el nuevo sensor de inmediato.
-                CargarContenidoSensores();
-            }
-        }
-        */
     }
 }
+
+
+

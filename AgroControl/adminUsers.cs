@@ -1,5 +1,6 @@
-﻿using BusinessLogic;
-using Entities;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
 using FontAwesome.Sharp;
 using System;
 using System.Data;
@@ -9,12 +10,14 @@ namespace AgroControl
 {
     public partial class adminUsers : Form
     {
+        private readonly IUsuarioController _usuarioController = new UsuarioController();
+
         public adminUsers()
         {
             InitializeComponent();
 
             btnNewUser.Click += BtnNewUser_Click;
-            iconButton1.Click += (s, e) => EliminarUsuario();
+            iconButton1.Click += (s, e) => DeleteUsuario();
             iconButton3.Click += (s, e) => BuscarUsuario();
 
             dgvUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -29,11 +32,9 @@ namespace AgroControl
         {
             try
             {
-                // Llamada limpia a la capa de negocio
-                DataTable dt = UsuarioBus.getUsuarios(filtro);
+                DataTable dt = _usuarioController.Listar(filtro);
                 dgvUsers.DataSource = dt;
 
-                // Configuración visual de las columnas
                 if (dgvUsers.Columns.Contains("idUsuario"))
                     dgvUsers.Columns["idUsuario"].Visible = false;
                 if (dgvUsers.Columns.Contains("nombre"))
@@ -43,7 +44,7 @@ namespace AgroControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los usuarios: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading users: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -58,31 +59,30 @@ namespace AgroControl
             }
         }
 
-        private void EliminarUsuario()
+        private void DeleteUsuario()
         {
             if (dgvUsers.CurrentRow == null)
             {
-                MessageBox.Show("Selecciona un usuario para eliminar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select a user to delete.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int id = Convert.ToInt32(dgvUsers.CurrentRow.Cells["idUsuario"].Value);
             string nombre = dgvUsers.CurrentRow.Cells["nombre"].Value.ToString();
 
-            var confirm = MessageBox.Show($"¿Eliminar usuario '{nombre}'?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var confirm = MessageBox.Show($"Delete user '{nombre}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (confirm != DialogResult.Yes) return;
 
             try
             {
-                // Llamada a la capa de negocio para eliminar
-                UsuarioBus.eliminar(id);
+                _usuarioController.Eliminar(id);
 
-                MessageBox.Show("Usuario eliminado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("User deleted successfully.", "Ã‰xito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarUsuarios();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error deleting: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -96,3 +96,7 @@ namespace AgroControl
         }
     }
 }
+
+
+
+

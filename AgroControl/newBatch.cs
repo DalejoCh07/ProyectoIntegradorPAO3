@@ -1,5 +1,5 @@
-﻿using Entities;
-using BusinessLogic;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Model.Entities;
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -10,7 +10,6 @@ namespace AgroControl
     {
         private int idInvernadero;
 
-        // Constructor modificado para recibir el ID del invernadero
         public newBatch(int idInv)
         {
             InitializeComponent();
@@ -21,14 +20,12 @@ namespace AgroControl
 
         private void newBatch_Load(object sender, EventArgs e)
         {
-            // Asumiendo que tienes un método que retorna las plantas
-            // Si no lo tienes, puedes hacer un "SELECT idPlanta, nombre FROM PLANTAS" directo en PlantaBus
             string sql = "SELECT idPlanta, nombre FROM PLANTA";
-            DataTable dtPlantas = DataAccess.DataAccess.getQuery(sql);
+            DataTable dtPlantas = AgroControl.Model.DataAccess.GetQuery(sql);
 
             cmbPlants.DataSource = dtPlantas;
-            cmbPlants.DisplayMember = "nombre"; // Lo que ve el usuario
-            cmbPlants.ValueMember = "idPlanta"; // Lo que guardamos en la DB
+            cmbPlants.DisplayMember = "nombre";
+            cmbPlants.ValueMember = "idPlanta";
             cmbPlants.SelectedIndex = -1;
         }
 
@@ -36,7 +33,7 @@ namespace AgroControl
         {
             if (cmbPlants.SelectedValue == null || numPlants.Value <= 0)
             {
-                MessageBox.Show("Por favor seleccione una planta e ingrese una cantidad válida.", "Advertencia");
+                MessageBox.Show("Please select a plant and enter a valid quantity.", "Warning");
                 return;
             }
 
@@ -50,14 +47,17 @@ namespace AgroControl
                     IdInvernadero = idInvernadero
                 };
 
-                BatchBus.insertarLote(nuevoLote);
+                new BatchController().Insertar(nuevoLote);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar el lote: " + ex.Message, "Error");
+                MessageBox.Show("Error saving batch: " + ex.Message, "Error");
             }
         }
     }
 }
+
+
+

@@ -1,0 +1,550 @@
+---
+title: AgroControl - Diagrama de Clases UML (por capas)
+---
+classDiagram
+
+    %% ========================================================================
+    %% SEGMENTO 1: CAPA MODELO - ENTIDADES
+    %% ========================================================================
+    subgraph Model_Entities ["Modelo - Entidades"]
+        class BaseEntity {
+            <<abstract>>
+        }
+        class Usuario {
+            +int IdUsuario
+            +string Nombre
+            +string Contrasena
+            +string TipoUsuario
+        }
+        class Sensor {
+            +int IdSensor
+            +string Tipo
+            +int IdInvernadero
+            +ToString() string
+        }
+        class Requirements {
+            +int IdRequerimientos
+            +decimal TempAireMin
+            +decimal TempAireMax
+            +decimal HumAireMin
+            +decimal HumAireMax
+            +decimal HumSueloMin
+            +decimal HumSueloMax
+            +decimal LuzMin
+            +decimal LuzMax
+            +int IdPlanta
+        }
+        class Reading {
+            +int IdLectura
+            +decimal Valor
+            +DateTime FechaHora
+            +int IdSensor
+        }
+        class Plant {
+            +int IdPlanta
+            +string Nombre
+            +string NombreCien
+            +string Descripcion
+            +ToString() string
+        }
+        class Greenhouse {
+            +int IdInvernadero
+            +string Nombre
+            +string Ubicacion
+            +string Descripcion
+            +ToString() string
+        }
+        class Batch {
+            +int IdLote
+            +int CantPlantas
+            +DateTime FechaSiembra
+            +DateTime? FechaCosecha
+            +int IdInvernadero
+            +int IdPlanta
+            +string NombrePlanta
+        }
+        class Actuador {
+            +int IdActuador
+            +string Tipo
+            +int IdInvernadero
+            +string Estado
+            +ToString() string
+        }
+        class Accion {
+            +int IdAccion
+            +string TipoAccion
+            +DateTime FechaHora
+            +int Duracion
+            +int IdActuador
+        end
+    end
+
+    BaseEntity <|-- Usuario
+    BaseEntity <|-- Sensor
+    BaseEntity <|-- Requirements
+    BaseEntity <|-- Reading
+    BaseEntity <|-- Plant
+    BaseEntity <|-- Greenhouse
+    BaseEntity <|-- Batch
+    BaseEntity <|-- Actuador
+    BaseEntity <|-- Accion
+
+    Greenhouse "1" --> "*" Sensor : tiene
+    Greenhouse "1" --> "*" Actuador : tiene
+    Greenhouse "1" --> "*" Batch : contiene
+    Plant "1" --> "*" Requirements : requiere
+    Plant "1" --> "*" Batch : usado_en
+    Actuador "1" --> "*" Accion : registra
+    Sensor "1" --> "*" Reading : produce
+
+    %% ========================================================================
+    %% SEGMENTO 2: CAPA ACCESO A DATOS (DAO)
+    %% ========================================================================
+    subgraph DataAccess_Layer ["Acceso a Datos (DAO)"]
+
+        class DataAccess {
+            <<static>>
+            +static readonly string ConnectionString
+            +static GetQuery(string, List~SqlParameter~?) DataTable
+            +static ExecQuery(string, List~SqlParameter~?) int
+        }
+
+        class IUsuarioDAO {
+            <<interface>>
+            +ValidarLogin(string, string) Usuario?
+            +Insert(Usuario) void
+            +GetUsuarios(string?) DataTable
+            +Delete(int) void
+        }
+        class ISensorDAO {
+            <<interface>>
+            +Insert(Sensor) int
+            +GetById(int) Sensor?
+            +GetAll() List~Sensor~
+            +GetByGreenhouse(int) List~Sensor~
+            +Delete(int) void
+        }
+        class IReadingDAO {
+            <<interface>>
+            +Insert(Reading) int
+            +GetAll() List~Reading~
+            +GetHistorialPivot(int) DataTable
+            +GetEstadisticas(DateTime,DateTime,int) DataTable
+            +GetUltimaLectura(int,int) decimal
+        }
+        class IPlantDAO {
+            <<interface>>
+            +Insert(Plant) int
+            +GetById(int) Plant?
+            +GetAll() List~Plant~
+            +Search(string) List~Plant~
+            +Delete(int) void
+        }
+        class IGreenhouseDAO {
+            <<interface>>
+            +Insert(Greenhouse) int
+            +GetAll() List~Greenhouse~
+            +Search(string) List~Greenhouse~
+            +Delete(int) void
+        }
+        class IBatchDAO {
+            <<interface>>
+            +GetActivo(int) Batch?
+            +Insert(Batch) void
+            +Finalizar(int) void
+            +GetHistorial(int) DataTable
+        }
+        class IActuadorDAO {
+            <<interface>>
+            +Insert(Actuador) int
+            +GetAll() List~Actuador~
+            +GetByGreenhouse(int) List~Actuador~
+            +Delete(int) void
+            +GetEstado(int,int) string
+            +SetEstado(int,int,string) void
+        }
+        class IAccionDAO {
+            <<interface>>
+            +Insert(Accion) int
+            +GetAll() List~Accion~
+            +GetByGreenhouse(int) List~Accion~
+            +GetByActuador(int) List~Accion~
+        }
+        class IRequirementsDAO {
+            <<interface>>
+            +Insert(Requirements) int
+            +GetByPlant(int) List~Requirements~
+        }
+    end
+
+    %% Implementaciones DAO concretas (sin repetir métodos, solo herencia)
+    class UsuarioDAO
+    class SensorDAO
+    class RequirementsDAO
+    class ReadingDAO
+    class PlantDAO
+    class GreenhouseDAO
+    class BatchDAO
+    class ActuadorDAO
+    class AccionDAO
+
+    IUsuarioDAO <|.. UsuarioDAO
+    ISensorDAO <|.. SensorDAO
+    IRequirementsDAO <|.. RequirementsDAO
+    IReadingDAO <|.. ReadingDAO
+    IPlantDAO <|.. PlantDAO
+    IGreenhouseDAO <|.. GreenhouseDAO
+    IBatchDAO <|.. BatchDAO
+    IActuadorDAO <|.. ActuadorDAO
+    IAccionDAO <|.. AccionDAO
+
+    UsuarioDAO ..> DataAccess
+    SensorDAO ..> DataAccess
+    RequirementsDAO ..> DataAccess
+    ReadingDAO ..> DataAccess
+    PlantDAO ..> DataAccess
+    GreenhouseDAO ..> DataAccess
+    BatchDAO ..> DataAccess
+    ActuadorDAO ..> DataAccess
+    AccionDAO ..> DataAccess
+
+    %% ========================================================================
+    %% SEGMENTO 3: CAPA CONTROLADOR
+    %% ========================================================================
+    subgraph Controller_Layer ["Controladores"]
+
+        class IUsuarioController {
+            <<interface>>
+            +Login(string,string) Usuario?
+            +Registrar(Usuario) void
+            +Listar(string?) DataTable
+            +Eliminar(int) void
+        }
+        class ISensorController {
+            <<interface>>
+            +Agregar(Sensor) int
+            +Obtener(int) Sensor?
+            +Listar() List~Sensor~
+            +ListarPorInvernadero(int) List~Sensor~
+            +Eliminar(int) void
+        }
+        class IReadingController {
+            <<interface>>
+            +Insertar(Reading) int
+            +Listar() List~Reading~
+            +HistorialPivot(int) DataTable
+            +Estadisticas(DateTime,DateTime,int) DataTable
+            +UltimaLectura(int,int) decimal
+        }
+        class IPlantController {
+            <<interface>>
+            +Agregar(Plant) int
+            +Obtener(int) Plant?
+            +Listar() List~Plant~
+            +Buscar(string) List~Plant~
+            +Eliminar(int) void
+            +GuardarConRequerimientos(Plant,Requirements) void
+        }
+        class IGreenhouseController {
+            <<interface>>
+            +Agregar(Greenhouse) int
+            +Listar() List~Greenhouse~
+            +Buscar(string) List~Greenhouse~
+            +Eliminar(int) void
+        }
+        class IBatchController {
+            <<interface>>
+            +ObtenerActivo(int) Batch?
+            +Insertar(Batch) void
+            +Finalizar(int) void
+            +Historial(int) DataTable
+        }
+        class IActuadorController {
+            <<interface>>
+            +Agregar(Actuador) int
+            +Listar() List~Actuador~
+            +ListarPorInvernadero(int) List~Actuador~
+            +Eliminar(int) void
+            +ObtenerEstado(int,int) string
+            +CambiarEstado(int,int,string) void
+        }
+        class IAccionController {
+            <<interface>>
+            +Insertar(Accion) int
+            +Listar() List~Accion~
+            +ListarPorInvernadero(int) List~Accion~
+            +ListarPorActuador(int) List~Accion~
+        }
+        class IRequirementsController {
+            <<interface>>
+            +Agregar(Requirements) int
+            +ObtenerPorPlanta(int) List~Requirements~
+        }
+        class ISimulationController {
+            <<interface>>
+            +GenerarCurvas(int) (double[],double[],double[],double[],double[])
+            +ObtenerComparacion(int) (double[],double[],double[],double[])
+        }
+    end
+
+    %% Implementaciones de controladores
+    class UsuarioController {
+        -IUsuarioDAO _dao
+    }
+    class SensorController {
+        -ISensorDAO _dao
+    }
+    class RequirementsController {
+        -IRequirementsDAO _dao
+    }
+    class ReadingController {
+        -IReadingDAO _dao
+    }
+    class PlantController {
+        -IPlantDAO _dao
+        -IRequirementsDAO _reqDao
+    }
+    class GreenhouseController {
+        -IGreenhouseDAO _dao
+    }
+    class BatchController {
+        -IBatchDAO _dao
+    }
+    class ActuadorController {
+        -IActuadorDAO _dao
+    }
+    class AccionController {
+        -IAccionDAO _dao
+    }
+    class SimulationController {
+        -const double C,alpha,alpha2,beta,gamma,eta
+        -const double kr,kd,ke,kh,kv,ks,kL
+    }
+
+    IUsuarioController <|.. UsuarioController
+    ISensorController <|.. SensorController
+    IRequirementsController <|.. RequirementsController
+    IReadingController <|.. ReadingController
+    IPlantController <|.. PlantController
+    IGreenhouseController <|.. GreenhouseController
+    IBatchController <|.. BatchController
+    IActuadorController <|.. ActuadorController
+    IAccionController <|.. AccionController
+    ISimulationController <|.. SimulationController
+
+    %% CONEXION: Controladores -> DAOs
+    UsuarioController --> UsuarioDAO
+    SensorController --> SensorDAO
+    RequirementsController --> RequirementsDAO
+    ReadingController --> ReadingDAO
+    PlantController --> PlantDAO
+    PlantController --> RequirementsDAO
+    GreenhouseController --> GreenhouseDAO
+    BatchController --> BatchDAO
+    ActuadorController --> ActuadorDAO
+    AccionController --> AccionDAO
+    SimulationController ..> DataAccess : SQL directo
+    PlantController ..> DataAccess : SQL directo
+
+    %% ========================================================================
+    %% SEGMENTO 4: CLASES DE SERVICIO
+    %% ========================================================================
+    subgraph Service_Layer ["Servicios"]
+
+        class SerialReaderService {
+            -Thread? _thread
+            -volatile bool _running
+            -string _connectionString
+            -int _idInvernadero
+            +string Status
+            +DateTime? UltimaLectura
+            +Start() void
+            +Stop() void
+            -Ejecutar() void
+            -AbrirPuerto() SerialPort?
+            -InsertLectura(decimal,DateTime,int) void
+            -GarantizarSensores() void
+        }
+
+        class SimulationBus {
+            <<static>>
+            +const double C,alpha,alpha2,beta,gamma,eta
+            +const double kr,kd,ke,kh,kv,ks,kL,Text
+            +SimularInvernadero(int) (double[],double[],double[],double[],double[])
+        }
+
+        class MathModel {
+            <<static>>
+            +const double dT_dHs
+            +const double dT_dt
+            +CalcularT(double,double) double
+            +Gradiente(double,double) double
+        }
+    end
+
+    SerialReaderService ..> DataAccess : SQL directo
+    SimulationBus ..> SimulationController : usado por
+
+    %% ========================================================================
+    %% SEGMENTO 5: CAPA VISTA (FORMULARIOS WINFORMS)
+    %% ========================================================================
+    subgraph View_Layer ["Vista (WinForms)"]
+
+        class Form1 {
+            -IUsuarioController _usuarioController
+            +ingresar(string,string) void
+        }
+
+        class Interfaz {
+            -Usuario _usuarioLogueado
+            -int _idInvernaderoActivo
+            +static SerialReaderService? SerialReader
+            +Interfaz(Usuario,int,string)
+            -IniciarSerialReader() void
+            -openSonForm(Form) void
+        }
+
+        class dashboard {
+            -IReadingController _readingController
+            -IActuadorController _actuadorController
+            -IBatchController _batchController
+            -Timer refreshTimer
+            -int _idInvernadero
+            -Batch loteActivoActual
+            -DateTime _ultimaLecturaValida
+            -Label lblSerialStatus
+            +dashboard(int)
+            -CargarLecturas() void
+            -CargarEstadoActuadores() void
+            -CargarLoteActivo() void
+            -ToggleActuador(int,string) void
+            -MostrarEstadoSerial() void
+        }
+
+        class charts {
+            -ISimulationController _simulationController
+            -Timer refreshTimer
+            -int idInvernaderoActual
+            +charts(int)
+            -ConfigurarEstiloGraficos() void
+            -GraficarModelosMatematicos() void
+            -Panel3D_Paint(object,PaintEventArgs) void
+            -CargarGraficaComparacion() void
+            +CargarGrafico2D(double[],double[],double[]) void
+            -MostrarGradiente() void
+        }
+
+        class plantRecord {
+            -IPlantController _plantController
+            -IRequirementsController _requirementsController
+            -Usuario _usuarioActual
+            +plantRecord(Usuario)
+        }
+
+        class readingLog {
+            -IReadingController _readingController
+            -IAccionController _accionController
+            -int _idInvernadero
+            +readingLog(int)
+        }
+
+        class technical {
+            -IGreenhouseController _greenhouseController
+            -ISensorController _sensorController
+            -IActuadorController _actuadorController
+            +technical()
+        }
+
+        class user {
+            -Usuario _usuarioActual
+            +user(Usuario)
+        }
+
+        class adminUsers {
+            -IUsuarioController _usuarioController
+        }
+
+        class newUser {
+            -IUsuarioController _usuarioController
+        }
+        class newPlant {
+            -IPlantController _plantController
+        }
+        class newSensor {
+            -IGreenhouseController _greenhouseController
+            -ISensorController _sensorController
+        }
+        class newGreenhouse {
+            -IGreenhouseController _greenhouseController
+        }
+        class newActuator {
+            -IGreenhouseController _greenhouseController
+            -IActuadorController _actuadorController
+        }
+        class newBatch {
+            -int idInvernadero
+        }
+        class filterReadings
+        class historyBatch
+        class help
+    end
+
+    %% Todas las forms heredan de Form
+    Form <|-- Form1
+    Form <|-- Interfaz
+    Form <|-- dashboard
+    Form <|-- charts
+    Form <|-- plantRecord
+    Form <|-- readingLog
+    Form <|-- technical
+    Form <|-- user
+    Form <|-- adminUsers
+    Form <|-- newUser
+    Form <|-- newPlant
+    Form <|-- newSensor
+    Form <|-- newGreenhouse
+    Form <|-- newActuator
+    Form <|-- newBatch
+    Form <|-- filterReadings
+    Form <|-- historyBatch
+    Form <|-- help
+
+    %% CONEXION: Formularios -> Controladores
+    Form1 --> IUsuarioController
+    dashboard --> IReadingController
+    dashboard --> IActuadorController
+    dashboard --> IBatchController
+    dashboard ..> Interfaz : lee SerialReader
+    charts --> ISimulationController
+    charts ..> MathModel : usa
+    plantRecord --> IPlantController
+    plantRecord --> IRequirementsController
+    readingLog --> IReadingController
+    readingLog --> IAccionController
+    technical --> IGreenhouseController
+    technical --> ISensorController
+    technical --> IActuadorController
+    adminUsers --> IUsuarioController
+    newUser --> IUsuarioController
+    newPlant --> IPlantController
+    newSensor --> IGreenhouseController
+    newSensor --> ISensorController
+    newGreenhouse --> IGreenhouseController
+    newActuator --> IGreenhouseController
+    newActuator --> IActuadorController
+
+    %% CONEXION: Formularios -> Servicios
+    Interfaz --> SerialReaderService : contiene
+
+    %% NAVEGACION ENTRE PANTALLAS
+    Form1 --> Interfaz : abre tras login
+    Form1 ..> DataAccess : carga combo
+    Interfaz --> dashboard
+    Interfaz --> charts
+    Interfaz --> readingLog
+    Interfaz --> plantRecord
+    Interfaz --> technical
+    Interfaz --> help
+    Interfaz --> user
+    user --> adminUsers
+    adminUsers --> newUser

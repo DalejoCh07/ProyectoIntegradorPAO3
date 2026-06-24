@@ -2,15 +2,8 @@
 {
     partial class Interfaz
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Interfaz));
@@ -93,7 +82,7 @@
             iconButton1.Padding = new Padding(11, 0, 0, 0);
             iconButton1.Size = new Size(263, 53);
             iconButton1.TabIndex = 8;
-            iconButton1.Text = "Technical functions";
+            iconButton1.Text = "Technical Functions";
             iconButton1.TextAlign = ContentAlignment.MiddleLeft;
             iconButton1.TextImageRelation = TextImageRelation.ImageBeforeText;
             iconButton1.UseVisualStyleBackColor = true;
@@ -338,3 +327,5 @@
         private FontAwesome.Sharp.IconButton btnUser;
     }
 }
+
+

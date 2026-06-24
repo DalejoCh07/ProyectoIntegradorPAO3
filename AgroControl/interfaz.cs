@@ -1,41 +1,49 @@
-﻿using BusinessLogic;
-using Entities;
+﻿using AgroControl.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AgroControl
 {
-    // En el archivo de tu FormPrincipal.cs
     public partial class Interfaz : Form
     {
-        private Usuario _usuarioLogueado; // Variable para guardar quién entró
+        private Usuario _usuarioLogueado;
         private int _idInvernaderoActivo = 1;
+        public static SerialReaderService? SerialReader { get; private set; }
+
         public Interfaz()
         {
             InitializeComponent();
         }
 
-        // Modificamos el constructor para que reciba al usuario
         public Interfaz(Usuario usuarioQueIngreso, int idInvernadero, string nombreInvernadero)
         {
             InitializeComponent();
             _usuarioLogueado = usuarioQueIngreso;
             _idInvernaderoActivo = idInvernadero;
             btnUser.Text = _usuarioLogueado.Nombre;
-            this.Text = "Panel Principal - Usuario: " + _usuarioLogueado.Nombre;
+            this.Text = "Main Panel - User: " + _usuarioLogueado.Nombre;
+            IniciarSerialReader();
+            this.FormClosing += (s, e) => SerialReader?.Stop();
+        }
+
+        private void IniciarSerialReader()
+        {
+            if (SerialReader == null)
+            {
+                SerialReader = new SerialReaderService(_idInvernaderoActivo);
+                SerialReader.Start();
+            }
         }
 
         private void FormPrincipal_Load(object sender, EventArgs e)
         {
-            // Así puedes mostrar el nombre en el título de la ventana
-
 
         }
 
@@ -76,10 +84,10 @@ namespace AgroControl
         {
             if (_usuarioLogueado.TipoUsuario != "Admin" && _usuarioLogueado.TipoUsuario != "Tecnico")
             {
-                MessageBox.Show("No tienes los permisos necesarios para acceder a esta sección.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You do not have permission to access this section.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            label1.Text = "Technical functions";
+            label1.Text = "Technical Functions";
             openSonForm(new technical());
         }
 
@@ -114,7 +122,6 @@ namespace AgroControl
 
         private void btnUser_Click(object sender, EventArgs e)
         {
-            // Pasamos el usuario que ya tenemos en la interfaz al nuevo formulario
             user ventanaConfig = new user(_usuarioLogueado);
             ventanaConfig.Show();
         }
@@ -141,3 +148,5 @@ namespace AgroControl
         }
     }
 }
+
+

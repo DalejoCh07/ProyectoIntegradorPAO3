@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="Forms\adminUsers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\charts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\dashboard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\filterReadings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\historyBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\interfaz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\newActuator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\newBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\newGreenhouse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\newPlant.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\newSensor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\newUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\plantRecord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\readingLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\technical.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\user.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

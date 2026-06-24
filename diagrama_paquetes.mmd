@@ -1,0 +1,131 @@
+---
+title: AgroControl - Diagrama de Paquetes
+---
+flowchart LR
+
+    %% ============================================================
+    %% CAPA MODELO
+    %% ============================================================
+    subgraph Model [AgroControl.Model]
+        direction TB
+        subgraph Model_Entities [Entities]
+            BE[BaseEntity]
+            U[Usuario]
+            S[Sensor]
+            R[Requirements]
+            RD[Reading]
+            P[Plant]
+            G[Greenhouse]
+            B[Batch]
+            A[Actuador]
+            AC[Accion]
+        end
+        subgraph Model_DAO_Interfaces [DAO.Interfaces]
+            IUD[IUsuarioDAO]
+            ISD[ISensorDAO]
+            IRD[IReadingDAO]
+            IPD[IPlantDAO]
+            IGD[IGreenhouseDAO]
+            IBD[IBatchDAO]
+            IAD[IActuadorDAO]
+            IAD2[IAccionDAO]
+            IRED[IRequirementsDAO]
+        end
+        subgraph Model_DAO_Impl [DAO.Implementations]
+            UD[UsuarioDAO]
+            SD[SensorDAO]
+            RRD[RequirementsDAO]
+            RED[ReadingDAO]
+            PD[PlantDAO]
+            GD[GreenhouseDAO]
+            BD[BatchDAO]
+            AD[ActuadorDAO]
+            AD2[AccionDAO]
+        end
+        subgraph Model_DataAccess [Data Access]
+            DA[DataAccess]
+        end
+    end
+
+    %% ============================================================
+    %% CAPA CONTROLADOR
+    %% ============================================================
+    subgraph Controller [AgroControl.Controller]
+        direction TB
+        subgraph Controller_Interfaces [Interfaces]
+            IUC[IUsuarioController]
+            ISC[ISensorController]
+            IRC[IReadingController]
+            IPC[IPlantController]
+            IGC[IGreenhouseController]
+            IBC[IBatchController]
+            IAC[IActuadorController]
+            IAC2[IAccionController]
+            IREC[IRequirementsController]
+            ISIC[ISimulationController]
+        end
+        subgraph Controller_Impl [Implementations]
+            UC[UsuarioController]
+            SC[SensorController]
+            RC[ReadingController]
+            PC[PlantController]
+            GC[GreenhouseController]
+            BC[BatchController]
+            ACTC[ActuadorController]
+            ACCC[AccionController]
+            REC[RequirementsController]
+            SIC[SimulationController]
+        end
+    end
+
+    %% ============================================================
+    %% CAPA VISTA (APLICACION WINFORMS)
+    %% ============================================================
+    subgraph View [AgroControl]
+        direction TB
+        subgraph View_Forms [Formularios]
+            F1[Form1 - Login]
+            IZ[Interfaz - Principal]
+            DB[dashboard]
+            CH[charts]
+            PR[plantRecord]
+            RL[readingLog]
+            TC[technical]
+            UR[user]
+            AU[adminUsers]
+            NU[newUser]
+            NP[newPlant]
+            NS[newSensor]
+            NG[newGreenhouse]
+            NA[newActuator]
+            NB[newBatch]
+        end
+        subgraph View_Services [Servicios]
+            SRS[SerialReaderService]
+            SB[SimulationBus]
+            MM[MathModel]
+        end
+    end
+
+    %% ============================================================
+    %% CONEXIONES ENTRE PAQUETES
+    %% ============================================================
+    Model_DAO_Impl --> Model_DataAccess
+    Model_DAO_Interfaces <|.. Model_DAO_Impl
+
+    Controller_Impl --> Controller_Interfaces
+    Controller_Impl --> Model_DAO_Interfaces
+    Controller_Impl -.-> Model_DataAccess
+
+    View_Forms --> Controller_Interfaces
+    View_Services -.-> Model_DataAccess
+    View_Forms --> View_Services
+
+    IZ -.-> DB
+    IZ -.-> CH
+    IZ -.-> PR
+    IZ -.-> RL
+    IZ -.-> TC
+    IZ -.-> UR
+    UR -.-> AU
+    AU -.-> NU

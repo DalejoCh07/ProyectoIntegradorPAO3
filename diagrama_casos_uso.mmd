@@ -1,0 +1,82 @@
+---
+title: AgroControl - Diagrama de Casos de Uso
+---
+usecaseDiagram
+
+    %% ==================== ACTORES ====================
+    actor Admin as "Admin"
+    actor Tecnico as "Técnico"
+    actor Agricultor as "Agricultor"
+    actor Arduino as "Arduino\n(Sistema)"
+    actor Reloj as "Reloj\n(Timer 5s)"
+
+    %% ==================== CASOS DE USO ====================
+    usecase UC01 as "Iniciar sesión"
+    usecase UC02 as "Gestionar usuarios"
+    usecase UC03 as "Gestionar invernaderos"
+    usecase UC04 as "Gestionar plantas"
+    usecase UC05 as "Gestionar sensores"
+    usecase UC06 as "Gestionar actuadores"
+    usecase UC07 as "Gestionar lotes de cultivo"
+    usecase UC08 as "Ver dashboard en tiempo real"
+    usecase UC09 as "Controlar actuadores"
+    usecase UC10 as "Ver gráficos de simulación"
+    usecase UC11 as "Ver historial de lecturas"
+    usecase UC12 as "Filtrar lecturas por fecha"
+    usecase UC13 as "Ver estadísticas de lecturas"
+    usecase UC14 as "Ver registro de acciones"
+    usecase UC15 as "Cargar datos de Arduino"
+    usecase UC16 as "Actualizar dashboard periódicamente"
+    usecase UC17 as "Simular modelo EDO"
+    usecase UC18 as "Ver superficie 3D del modelo"
+
+    %% ==================== RELACIONES ACTOR->UC ====================
+    Admin --> UC01
+    Admin --> UC02
+    Admin --> UC03
+    Admin --> UC04
+    Admin --> UC05
+    Admin --> UC06
+    Admin --> UC07
+    Admin --> UC08
+    Admin --> UC09
+    Admin --> UC10
+    Admin --> UC11
+    Admin --> UC14
+    Admin --> UC17
+    Admin --> UC18
+
+    Tecnico --> UC01
+    Tecnico --> UC03
+    Tecnico --> UC04
+    Tecnico --> UC05
+    Tecnico --> UC06
+    Tecnico --> UC07
+    Tecnico --> UC08
+    Tecnico --> UC09
+    Tecnico --> UC10
+    Tecnico --> UC11
+    Tecnico --> UC14
+    Tecnico --> UC17
+    Tecnico --> UC18
+
+    Agricultor --> UC01
+    Agricultor --> UC08
+    Agricultor --> UC10
+    Agricultor --> UC11
+    Agricultor --> UC17
+    Agricultor --> UC18
+
+    Arduino --> UC15
+
+    Reloj --> UC16
+
+    %% ==================== RELACIONES EXTEND/INCLUDE ====================
+    UC12 .> UC11 : extends
+    UC13 .> UC11 : extends
+    UC08 ..> UC15 : <<include>>
+    UC08 ..> UC16 : <<include>>
+    UC10 ..> UC17 : <<include>>
+    UC10 ..> UC18 : <<include>>
+    UC15 ..> UC02 : <<include>>
+    UC15 ..> UC03 : <<include>>

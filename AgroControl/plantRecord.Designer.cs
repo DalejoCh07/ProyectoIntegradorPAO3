@@ -2,15 +2,8 @@
 {
     partial class plantRecord
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
@@ -301,7 +290,7 @@
             label8.Name = "label8";
             label8.Size = new Size(71, 29);
             label8.TabIndex = 14;
-            label8.Text = "°C";
+            label8.Text = "Â°C";
             // 
             // pictureBox2
             // 
@@ -513,7 +502,7 @@
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(148, 30);
             textBox1.TabIndex = 7;
-            textBox1.Text = "Buscar planta";
+            textBox1.Text = "Search plant";
             // 
             // plantRecord
             // 
@@ -585,3 +574,5 @@
         private PictureBox pictureBox6;
     }
 }
+
+

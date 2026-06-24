@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
+using System;
+using System.Drawing;
 using System.Windows.Forms;
-using DataAccess;
-using BusinessLogic;
-using Entities;
 
 namespace AgroControl
 {
@@ -14,11 +12,21 @@ namespace AgroControl
         private System.Windows.Forms.Timer refreshTimer;
         private int _idInvernadero;
         private Batch loteActivoActual;
+        private DateTime _ultimaLecturaValida = DateTime.MinValue;
+
+        private readonly IReadingController _readingController = new ReadingController();
+        private readonly IActuadorController _actuadorController = new ActuadorController();
+        private readonly IBatchController _batchController = new BatchController();
+        private Label lblSerialStatus;
 
         public dashboard(int idInvernadero)
         {
             InitializeComponent();
             _idInvernadero = idInvernadero;
+
+            lblSerialStatus = new Label { AutoSize = true, ForeColor = Color.Gray, Location = new Point(12, this.Height - 30) };
+            this.Controls.Add(lblSerialStatus);
+
             CargarLecturas();
             CargarEstadoActuadores();
             CargarLoteActivo();
@@ -26,17 +34,26 @@ namespace AgroControl
             iconButton4.Click += (s, e) => ToggleActuador(1, "Bomba de Riego");
             iconButton5.Click += (s, e) => ToggleActuador(2, "Ventilador");
             iconButton2.Click += (s, e) => ToggleActuador(3, "Humidificador");
-            iconButton1.Click += (s, e) => ToggleActuador(4, "Lámpara");
+            iconButton1.Click += (s, e) => ToggleActuador(4, "Lamp");
 
             refreshTimer = new System.Windows.Forms.Timer();
             refreshTimer.Interval = 5000;
-            refreshTimer.Tick += (s, e) => { CargarLecturas(); CargarEstadoActuadores(); CargarLoteActivo(); };
+            refreshTimer.Tick += (s, e) => { CargarLecturas(); CargarEstadoActuadores(); CargarLoteActivo(); MostrarEstadoSerial(); };
             refreshTimer.Start();
+        }
+
+        private void MostrarEstadoSerial()
+        {
+            var sr = Interfaz.SerialReader;
+            if (sr == null)
+                lblSerialStatus.Text = "SerialReader: not started";
+            else
+                lblSerialStatus.Text = $"SerialReader: {sr.Status}";
         }
 
         private void CargarLoteActivo()
         {
-            loteActivoActual = BatchBus.obtenerLoteActivo(_idInvernadero);
+            loteActivoActual = _batchController.ObtenerActivo(_idInvernadero);
 
             if (loteActivoActual != null)
             {
@@ -62,7 +79,7 @@ namespace AgroControl
         {
             if (loteActivoActual != null)
             {
-                MessageBox.Show("Primero debe finalizar el lote actual antes de crear uno nuevo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You must finish the current batch before creating a new one.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -79,19 +96,19 @@ namespace AgroControl
         {
             if (loteActivoActual != null)
             {
-                DialogResult result = MessageBox.Show("¿Está seguro de finalizar el lote actual? Se registrará la cosecha con la fecha de hoy.", "Confirmar Cosecha", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult result = MessageBox.Show("Are you sure you want to finish the current batch? The harvest will be recorded with today date.", "Confirm Harvest", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
                     try
                     {
-                        BatchBus.finalizarLote(loteActivoActual.IdLote);
-                        MessageBox.Show("Lote finalizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        new BatchController().Finalizar(loteActivoActual.IdLote);
+                        MessageBox.Show("Batch completed successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         CargarLoteActivo();
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error al finalizar el lote: " + ex.Message, "Error");
+                        MessageBox.Show("Error finishing batch: " + ex.Message, "Error");
                     }
                 }
             }
@@ -109,68 +126,53 @@ namespace AgroControl
         {
             try
             {
-                decimal humSuelo = ObtenerUltimaLectura(20);
-                decimal humAire = ObtenerUltimaLectura(21);
-                decimal tempAire = ObtenerUltimaLectura(22);
-                decimal luz = ObtenerUltimaLectura(23);
+                decimal humSuelo = _readingController.UltimaLectura(20, _idInvernadero);
+                decimal humAire = _readingController.UltimaLectura(21, _idInvernadero);
+                decimal tempAire = _readingController.UltimaLectura(22, _idInvernadero);
+                decimal luz = _readingController.UltimaLectura(23, _idInvernadero);
+
+                bool hayAlgunDato = humSuelo > 0 || humAire > 0 || tempAire > 0 || luz > 0;
+                if (hayAlgunDato)
+                    _ultimaLecturaValida = DateTime.Now;
+
+                bool datosRecientes = (DateTime.Now - _ultimaLecturaValida).TotalSeconds < 30;
+                string estado = datosRecientes ? "Normal" : "No data";
 
                 label6.Text = humSuelo.ToString("F0");
-                label15.Text = humSuelo > 0 ? "Normal" : "Sin datos";
+                label15.Text = hayAlgunDato ? estado : "No data";
                 label4.Text = humAire.ToString("F0");
-                label2.Text = humAire > 0 ? "Normal" : "Sin datos";
+                label2.Text = hayAlgunDato ? estado : "No data";
                 label11.Text = tempAire.ToString("F1");
-                label9.Text = tempAire > 0 ? "Normal" : "Sin datos";
+                label9.Text = hayAlgunDato ? estado : "No data";
                 label16.Text = luz.ToString("F0");
-                label13.Text = luz > 0 ? "Normal" : "Sin datos";
+                label13.Text = hayAlgunDato ? estado : "No data";
             }
             catch
             {
-                label6.Text = "--"; label15.Text = "Error";
-                label4.Text = "--"; label2.Text = "Error";
-                label11.Text = "--"; label9.Text = "Error";
-                label16.Text = "--"; label13.Text = "Error";
+                bool datosRecientes = (DateTime.Now - _ultimaLecturaValida).TotalSeconds < 30;
+                if (datosRecientes)
+                {
+                    label15.Text = "No data";
+                    label2.Text = "No data";
+                    label9.Text = "No data";
+                    label13.Text = "No data";
+                }
+                else
+                {
+                    label6.Text = "--"; label15.Text = "Error";
+                    label4.Text = "--"; label2.Text = "Error";
+                    label11.Text = "--"; label9.Text = "Error";
+                    label16.Text = "--"; label13.Text = "Error";
+                }
             }
-        }
-
-        private decimal ObtenerUltimaLectura(int idSensor)
-        {
-            string sql = @"
-                SELECT TOP 1 L.valor
-                FROM LECTURA L
-                INNER JOIN SENSOR S ON L.idSensor = S.idSensor
-                WHERE S.idInvernadero = @idInv AND L.idSensor = @idSensor
-                ORDER BY L.fechaHora DESC";
-            List<SqlParameter> parametros = new List<SqlParameter>
-            {
-                new SqlParameter("@idInv", _idInvernadero),
-                new SqlParameter("@idSensor", idSensor)
-            };
-            DataTable dt = DataAccess.DataAccess.getQuery(sql, parametros);
-            if (dt.Rows.Count > 0)
-                return Convert.ToDecimal(dt.Rows[0]["valor"]);
-            return 0;
         }
 
         private void CargarEstadoActuadores()
         {
-            label25.Text = ObtenerEstadoActuador(1);
-            label24.Text = ObtenerEstadoActuador(2);
-            label23.Text = ObtenerEstadoActuador(3);
-            label26.Text = ObtenerEstadoActuador(4);
-        }
-
-        private string ObtenerEstadoActuador(int idActuador)
-        {
-            string sql = "SELECT estado FROM ACTUADOR WHERE idActuador = @id AND idInvernadero = @idInv";
-            List<SqlParameter> parametros = new List<SqlParameter>
-            {
-                new SqlParameter("@id", idActuador),
-                new SqlParameter("@idInv", _idInvernadero)
-            };
-            DataTable dt = DataAccess.DataAccess.getQuery(sql, parametros);
-            if (dt.Rows.Count > 0)
-                return dt.Rows[0]["estado"].ToString().ToLower();
-            return "off";
+            label25.Text = _actuadorController.ObtenerEstado(1, _idInvernadero);
+            label24.Text = _actuadorController.ObtenerEstado(2, _idInvernadero);
+            label23.Text = _actuadorController.ObtenerEstado(3, _idInvernadero);
+            label26.Text = _actuadorController.ObtenerEstado(4, _idInvernadero);
         }
 
         private void label1_Click_1(object sender, EventArgs e) { }
@@ -185,16 +187,9 @@ namespace AgroControl
         {
             try
             {
-                string estadoActual = ObtenerEstadoActuador(idActuador);
+                string estadoActual = _actuadorController.ObtenerEstado(idActuador, _idInvernadero);
                 string nuevoEstado = estadoActual == "on" ? "OFF" : "ON";
-                string sql = "UPDATE ACTUADOR SET estado = @estado WHERE idActuador = @id AND idInvernadero = @idInv";
-                List<SqlParameter> parametros = new List<SqlParameter>
-                {
-                    new SqlParameter("@estado", nuevoEstado),
-                    new SqlParameter("@id", idActuador),
-                    new SqlParameter("@idInv", _idInvernadero)
-                };
-                DataAccess.DataAccess.execQuery(sql, parametros);
+                _actuadorController.CambiarEstado(idActuador, _idInvernadero, nuevoEstado);
                 CargarEstadoActuadores();
             }
             catch (Exception ex)
@@ -204,3 +199,5 @@ namespace AgroControl
         }
     }
 }
+
+

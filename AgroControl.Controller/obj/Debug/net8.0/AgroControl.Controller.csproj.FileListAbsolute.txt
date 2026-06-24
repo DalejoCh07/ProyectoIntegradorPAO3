@@ -1,0 +1,16 @@
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\bin\Debug\net8.0\AgroControl.Controller.deps.json
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\bin\Debug\net8.0\AgroControl.Controller.dll
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\bin\Debug\net8.0\AgroControl.Controller.pdb
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\bin\Debug\net8.0\AgroControl.Model.dll
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\bin\Debug\net8.0\AgroControl.Model.pdb
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.csproj.AssemblyReference.cache
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.AssemblyInfoInputs.cache
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.AssemblyInfo.cs
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.csproj.CoreCompileInputs.cache
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.sourcelink.json
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroCont.BBD5FF62.Up2Date
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.dll
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\refint\AgroControl.Controller.dll
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\AgroControl.Controller.pdb
+C:\Users\daalc\source\repos\AgroControl\AgroControl.Controller\obj\Debug\net8.0\ref\AgroControl.Controller.dll

@@ -1,4 +1,4 @@
-﻿using BusinessLogic;
+﻿using AgroControl.Controller.Implementations;
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -20,23 +20,23 @@ namespace AgroControl
         {
             try
             {
-                DataTable dtHistorial = BatchBus.obtenerHistorial(idInvernadero);
+                DataTable dtHistorial = new BatchController().Historial(idInvernadero);
                 dgvHistory.DataSource = dtHistorial;
 
-                // Configuraciones visuales del DataGridView
                 if (dgvHistory.Columns.Contains("idLote"))
                     dgvHistory.Columns["idLote"].Visible = false;
 
-                // Formato para mostrar campos nulos en las fechas si se da el caso
-                if (dgvHistory.Columns.Contains("Fecha de Cosecha"))
-                    dgvHistory.Columns["Fecha de Cosecha"].DefaultCellStyle.NullValue = "En proceso";
+                if (dgvHistory.Columns.Contains("Harvest Date"))
+                    dgvHistory.Columns["Harvest Date"].DefaultCellStyle.NullValue = "In progress";
 
                 dgvHistory.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar el historial: " + ex.Message, "Error");
+                MessageBox.Show("Error loading history: " + ex.Message, "Error");
             }
         }
     }
 }
+
+

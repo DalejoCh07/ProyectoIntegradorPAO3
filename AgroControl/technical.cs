@@ -1,5 +1,6 @@
-﻿using BusinessLogic;
-using Entities;
+﻿using AgroControl.Controller.Implementations;
+using AgroControl.Controller.Interfaces;
+using AgroControl.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,12 +10,14 @@ namespace AgroControl
 {
     public partial class technical : Form
     {
+        private readonly IGreenhouseController _greenhouseController = new GreenhouseController();
+        private readonly ISensorController _sensorController = new SensorController();
+        private readonly IActuadorController _actuadorController = new ActuadorController();
+
         public technical()
         {
             InitializeComponent();
 
-            // Suscripción de eventos corregida
-            // Asumo que el botón de buscar se llama btnSearch y no btnDasboard
             btnSearch.Click += BtnSearchGreenhouse_Click;
             btnDeleteGreenhouse.Click += BtnDeleteGreenhouse_Click;
             btnDeleteSensor.Click += BtnDeleteSensor_Click;
@@ -27,45 +30,37 @@ namespace AgroControl
             btnNewSensor.Click += BtnNewSensor_Click;
             btnNewActuator.Click += BtnNewActuator_Click;
 
-            // EL EVENTO ESTRELLA: Se dispara cada vez que seleccionas un invernadero distinto
             dgvPlants.SelectionChanged += DgvPlants_SelectionChanged;
 
-            // Solo cargamos los invernaderos al inicio. 
-            // El evento SelectionChanged se encargará de cargar los sensores y actuadores automáticamente.
             CargarGreenhouses();
         }
 
-        // ---- NUEVA LÓGICA DE SINCRONIZACIÓN ----
         private void DgvPlants_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvPlants.CurrentRow != null)
             {
-                // Si hay un invernadero seleccionado, extraemos su ID y cargamos sus dependencias
                 Greenhouse sel = (Greenhouse)dgvPlants.CurrentRow.DataBoundItem;
                 CargarSensores(sel.IdInvernadero);
                 CargarActuadores(sel.IdInvernadero);
             }
             else
             {
-                // Si no hay nada seleccionado (ej. buscaron algo que no existe), vaciamos las tablas
                 dataGridView1.DataSource = null;
                 dataGridView2.DataSource = null;
             }
         }
 
-        // Resto de los botones "Nuevo" (sin cambios mayores)
         private void BtnNewGreenhouse_Click(object sender, EventArgs e)
         {
             using (newGreenhouse frm = new newGreenhouse())
             {
                 if (frm.ShowDialog() == DialogResult.OK)
-                    CargarGreenhouses(); // Esto disparará SelectionChanged automáticamente
+                    CargarGreenhouses();
             }
         }
 
         private void BtnNewSensor_Click(object sender, EventArgs e)
         {
-            // Opcional: Podrías pasar el ID del invernadero seleccionado al formulario nuevo
             using (newSensor frm = new newSensor())
             {
                 if (frm.ShowDialog() == DialogResult.OK && dgvPlants.CurrentRow != null)
@@ -88,13 +83,11 @@ namespace AgroControl
             }
         }
 
-        // ---- GREENHOUSES ----
-
         private void CargarGreenhouses()
         {
             try
             {
-                List<Greenhouse> lista = GreenhouseBus.getGreenhouses();
+                List<Greenhouse> lista = _greenhouseController.Listar();
                 dgvPlants.DataSource = lista;
                 if (dgvPlants.Columns.Contains("IdInvernadero"))
                     dgvPlants.Columns["IdInvernadero"].Visible = false;
@@ -103,7 +96,7 @@ namespace AgroControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar invernaderos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading greenhouses: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -118,9 +111,8 @@ namespace AgroControl
             {
                 try
                 {
-                    List<Greenhouse> lista = GreenhouseBus.buscar(busqueda);
+                    List<Greenhouse> lista = _greenhouseController.Buscar(busqueda);
                     dgvPlants.DataSource = lista;
-                    // Los formatos se mantienen igual
                     if (dgvPlants.Columns.Contains("IdInvernadero"))
                         dgvPlants.Columns["IdInvernadero"].Visible = false;
                     if (dgvPlants.Columns.Contains("Descripcion"))
@@ -165,32 +157,29 @@ namespace AgroControl
             if (dgvPlants.CurrentRow == null) return;
 
             Greenhouse sel = (Greenhouse)dgvPlants.CurrentRow.DataBoundItem;
-            DialogResult confirm = MessageBox.Show($"¿Eliminar \"{sel.Nombre}\"?\nSe borrarán también sus sensores y actuadores.",
-                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = MessageBox.Show($"Delete \"{sel.Nombre}\"?\nIts sensors and actuators will also be deleted.",
+                "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
                 try
                 {
-                    GreenhouseBus.eliminar(sel.IdInvernadero);
-                    MessageBox.Show("Invernadero eliminado.", "Eliminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _greenhouseController.Eliminar(sel.IdInvernadero);
+                    MessageBox.Show("Invernadero Deleted.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarGreenhouses();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error deleting: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
-        // ---- SENSORS (MODIFICADO) ----
 
         private void CargarSensores(int idInvernadero)
         {
             try
             {
-                // Usamos el nuevo método filtrado
-                List<Sensor> lista = SensorBus.getSensoresPorInvernadero(idInvernadero);
+                List<Sensor> lista = _sensorController.ListarPorInvernadero(idInvernadero);
                 dataGridView1.DataSource = lista;
 
                 if (dataGridView1.Columns.Contains("IdSensor"))
@@ -200,7 +189,7 @@ namespace AgroControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar sensores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading sensors: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -209,33 +198,29 @@ namespace AgroControl
             if (dataGridView1.CurrentRow == null) return;
 
             Sensor sel = (Sensor)dataGridView1.CurrentRow.DataBoundItem;
-            DialogResult confirm = MessageBox.Show($"¿Eliminar sensor \"{sel.Tipo}\"?\nSe borrarán también sus lecturas.",
-                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = MessageBox.Show($"Delete sensor \"{sel.Tipo}\"?\nIts readings will also be deleted.",
+                "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
                 try
                 {
-                    SensorBus.eliminar(sel.IdSensor);
-                    MessageBox.Show("Sensor eliminado.", "Eliminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    // Recargamos pasándole el ID actual
+                    _sensorController.Eliminar(sel.IdSensor);
+                    MessageBox.Show("Sensor Deleted.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarSensores(sel.IdInvernadero);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error deleting: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
-        // ---- ACTUATORS (MODIFICADO) ----
 
         private void CargarActuadores(int idInvernadero)
         {
             try
             {
-                // Usamos el nuevo método filtrado
-                List<Actuador> lista = ActuadorBus.getActuadoresPorInvernadero(idInvernadero);
+                List<Actuador> lista = _actuadorController.ListarPorInvernadero(idInvernadero);
                 dataGridView2.DataSource = lista;
 
                 if (dataGridView2.Columns.Contains("IdActuador"))
@@ -245,7 +230,7 @@ namespace AgroControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar actuadores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error loading actuators: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -254,23 +239,25 @@ namespace AgroControl
             if (dataGridView2.CurrentRow == null) return;
 
             Actuador sel = (Actuador)dataGridView2.CurrentRow.DataBoundItem;
-            DialogResult confirm = MessageBox.Show($"¿Eliminar actuador \"{sel.Tipo}\"?",
-                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = MessageBox.Show($"Delete actuator \"{sel.Tipo}\"?",
+                "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
                 try
                 {
-                    ActuadorBus.eliminar(sel.IdActuador);
-                    MessageBox.Show("Actuador eliminado.", "Eliminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    // Recargamos pasándole el ID actual
+                    _actuadorController.Eliminar(sel.IdActuador);
+                    MessageBox.Show("Actuator deleted.", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarActuadores(sel.IdInvernadero);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error deleting: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
     }
 }
+
+
+
